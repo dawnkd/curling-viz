@@ -21,7 +21,10 @@ var width = 500,
     height = 1000,
     sixfeet = width / 2 *0.9,
     rockwidth = sixfeet / 6 * 10 / 12,
-    spacer = rockwidth/4;
+    rockradius = rockwidth/2,
+    rockoutline = rockwidth/5,
+    spacer = rockwidth/4,
+    svg_rockradius = rockradius + rockoutline/2;
 
 var radii = {
     "twelve": sixfeet,
@@ -30,6 +33,11 @@ var radii = {
     "button": sixfeet/12,
 };
 
+var pin = {
+    "x": width/2
+    ,"y": radii.twelve + sixfeet
+}
+
 var rocks = []
 var row = 0, col = 1;
 for (let i = 1; i <= 8; ++i) {
@@ -37,12 +45,20 @@ for (let i = 1; i <= 8; ++i) {
     if (i%2) row++;
     let x = rockwidth * col + spacer * (i%2) + 1
     let y = rockwidth * row + spacer * (row-1)
-    rocks.push({x: x, y: y, id: `red${i}`, color: "red"})
+    rocks.push({x: x, y: y, name: `red${i}`, color: "red", id: i})
 
     x = width - rockwidth * col - spacer * (i%2) + 1
     y = rockwidth * row + spacer * (row-1)
-    rocks.push({x: x, y: y, id: `yel${i}`, color: "yellow"})
-        
+    rocks.push({x: x, y: y, name: `yel${i}`, color: "yellow", id: i+8})       
+}
+
+var measures = []
+
+var house = []
+cx = width/2
+cy = radii.twelve + sixfeet
+for (r in radii) {
+    house.push({r: r, cx: cx, cy: cy, })
 }
  
 
@@ -50,7 +66,7 @@ var svg = curling.append("svg")
     .attr("width", width)
     .attr("height", height)
     .append("g")
-        // .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    .attr("class", "house")
 
 //sheet
 svg.append("rect")
@@ -61,64 +77,122 @@ svg.append("rect")
     .attr("y", 0)
     .style("fill", "white")
 
-svg.append("circle")
-    .attr("class", "twelve")
-    .attr("class", "house")
-    .attr("r", radii.twelve)
-    .attr("cx", width/2)
-    .attr("cy", radii.twelve + sixfeet)
-    .style("fill", "blue")
-
-svg.append("circle")
-    .attr("class", "eight")
-    .attr("class", "house")
-    .attr("r", radii.eight)
-    .attr("cx", width/2)
-    .attr("cy", radii.twelve + sixfeet)
-    .style("fill", "white")
-
-svg.append("circle")
-    .attr("class", "four")
-    .attr("class", "house")
-    .attr("r", radii.four)
-    .attr("cx", width/2)
-    .attr("cy", radii.twelve + sixfeet)
-    .style("fill", "red")
-
-svg.append("circle")
-    .attr("class", "button")
-    .attr("class", "house")
-    .attr("r", radii.button)
-    .attr("cx", width/2)
-    .attr("cy", radii.twelve + sixfeet)
-    .style("fill", "white")
-
-var backline = 5
+var backline = 2
 svg.append("line")
+    .name()
     .attr("x1", 0)
-    .attr("y1", sixfeet - backline/2)
+    .attr("y1", sixfeet)
     .attr("x2", width)
-    .attr("y2", sixfeet - backline/2)
+    .attr("y2", sixfeet)
     .style("stroke", "black")
     .style("stroke-width", backline)
 
-const newData = svg
-    .selectAll("rock")
-    .data(rocks)
-    .join("circle")
-    .attr("class", "rock")
-    .attr("class", d => d.id)
-    .attr("r", rockwidth/2)
-    .attr("cx", d => d.x)
-    .attr("cy", d => d.y)
-    .style("fill", d => d.color)
-    .style("stroke", "grey")
-    .style("stroke-width", rockwidth/5)
-    .call(d3.drag()
-        .clickDistance(CLICK_DISTANCE)
-        .on("start", dragstarted)
-        .on("drag", dragged)
-        .on("end", dragended));
+svg.append("circle")
+    .attr("name", "twelve")
+    .attr("class", "house")
+    .attr("r", radii.twelve)
+    .attr("cx", pin.x)
+    .attr("cy", pin.y)
+    .style("fill", "blue")
+    .style("stroke", "black")
+
+svg.append("circle")
+    .attr("name", "eight")
+    .attr("class", "house")
+    .attr("r", radii.eight)
+    .attr("cx", pin.x)
+    .attr("cy", pin.y)
+    .style("fill", "white")
+    .style("stroke", "black")
+
+svg.append("circle")
+    .attr("name", "four")
+    .attr("class", "house")
+    .attr("r", radii.four)
+    .attr("cx", pin.x)
+    .attr("cy", pin.y)
+    .style("fill", "red")
+    .style("stroke", "black")
+
+svg.append("line")
+
+
+svg.append("circle")
+    .attr("name", "button")
+    .attr("class", "house")
+    .attr("r", radii.button)
+    .attr("cx", pin.x)
+    .attr("cy", pin.y)
+    .style("fill", "white")
+    .style("stroke", "black")
+
+
+updateRocks(rocks)
+
+
+function updateRocks(rocks) {
+    svg.selectAll(".rock")
+        .data(rocks, d=>d.id)
+        .join(
+            enter => {
+                enter.append("circle")
+                    .attr("class", "rock")
+                    .attr("name", d => d.name)
+                    .attr("id", d => d.id)
+                    .attr("r", rockradius)
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y)
+                    .style("fill", d => d.color)
+                    .style("stroke", "grey")
+                    .style("stroke-width", rockoutline)
+                    .call(d3.drag()
+                        .clickDistance(CLICK_DISTANCE)
+                        .on("start", dragstarted)
+                        .on("drag", dragged)
+                        .on("end", dragended)
+                    );
+            },
+            update => {
+                update
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y)
+            },
+            exit => exit.remove()
+        )   
+}
+
+function updateMeasures(measures) {
+    const t = d3.transition()
+        .duration(750);
+
+    svg.selectAll(".measure")
+        .data(measures, d => d.id)
+        .join(
+            enter => {
+                enter.append("circle")
+                    .attr("class", "measure")
+                    .attr("id", d => d.id)
+                    .attr("r", d => d.r)
+                    .attr("cx", pin.x)
+                    .attr("cy", pin.y)
+                    .attr("fill", "none")
+                    .style("stroke", d => {
+                        if (d.color == "red") {
+                            return "maroon"
+                        } else {
+                            return "darkgoldenrod"
+                        }
+                    })
+                    .style("stroke-width", 2);
+            },
+            update => {
+                update.attr("r", d => d.r)
+            },
+            exit => {
+                exit.remove()
+            }
+        )
+}
 
 function clicked(d, i) {
     if (d3.event.defaultPrevented) return; // dragged
@@ -141,10 +215,39 @@ function dragged(d) {
   }
 
   e.attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+  if (rockInHouse(d)) {
+    r = rockDist(d) - svg_rockradius
+    // update radius or add measure circle around rock 
+    if (measures.some(m => m.id == d.id)){
+        measure = measures.find(m => m.id == d.id)
+        measure.r = r
+    } else {
+        measures.push({id: d.id, r: r, color: d.color})
+    }
+  } else {
+    // remove measure circle
+    measures = measures.filter(m => m.id != d.id)
+  }
+  updateMeasures(measures)
 }
 
 function dragended(d) {
+
+  const filter = (e) => e.id == d.id
+  let i = rocks.findIndex(filter)
+  rocks[i].x = d.x
+  rocks[i].y = d.y
+  updateRocks(rocks)
   d3.select(this).classed("active", false);
+}
+
+var rockDist = (rock) => Math.sqrt((pin.x - rock.x)**2 + (pin.y - rock.y)**2)
+
+var rockInHouse = function(rock) {
+    if (rockDist(rock) <= radii.twelve + svg_rockradius) {
+        return true
+    }
+    return false
 }
 
 </script>

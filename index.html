@@ -7,16 +7,182 @@ body {
     font-family: sans-serif;
     font-style: italic;
 }
+
+.flex-container-row {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.flex-container-col {
+    float: right;
+    display: flex;
+    flex-direction: row;
+}
+
+#controls {
+    float: right;
+    background-color: lightgrey;
+}
+
+#club_scoreboard {
+    float: right;
+}
+
+#tv_scoreboard {
+    float: right;
+}
+
+.tg1  {border-collapse:collapse;border-spacing:0;background-color:white;}
+.tg1 td{font-family:Arial, sans-serif;font-size:14px;padding:8px 13px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg1 th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:8px 13px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg1 .tg1-red{background-color:#ff0000;text-align:left;vertical-align:top}
+.tg1 .tg1-yellow{background-color:#ffff00;text-align:left;vertical-align:top}
+.tg1 .tg1-end{text-align:center;vertical-align:top}
+.tg1 .tg1-score{text-align:center;vertical-align:top}
+.tg1 .tg1-sheet{text-align:left;vertical-align:top}
+
+.tg2  {border-collapse:collapse;border-spacing:0;background-color:white;}
+.tg2 td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg2 th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg2 .tg2-yellow{background-color:#ffff00;border-color:#000000;text-align:left;vertical-align:middle}
+.tg2 .tg2-baqh{text-align:center;vertical-align:top}
+.tg2 .tg2-sheet{border-color:#000000;text-align:left;vertical-align:middle}
+.tg2 .tg2-cell{border-color:#000000;text-align:center;vertical-align:middle}
+.tg2 .tg2-red{background-color:#ff0000;border-color:#000000;text-align:left;vertical-align:middle}
+
  
 </style>
 <body>
+    <div class="flex-container-row">
+        <div id="curling">
+        <div id="controls">
+            <input type="button" value="Reset" onclick="reset_click()">
+            <br>
+            <input type="button" value="Score" onclick="score_click()">
+        </div>
+        <div id="scoreboards" class="flex-container-col">
+            <div id="club_scoreboard" >
+                <table class="tg1">
+                    <tr>
+                    <th class="tg1-sheet" colspan="17">Sheet 1</th>
+                    </tr>
+                    <tr>
+                        <td class="tg1-red"></td>
+                        <td class="tg1-end" id="club_red1"><img src="images/hammer.jpeg" style="width: 13px; height: 13px"></td>
+                        <td class="tg1-end" id="club_red2"></td>
+                        <td class="tg1-end" id="club_red3"></td>
+                        <td class="tg1-end" id="club_red4"></td>
+                        <td class="tg1-end" id="club_red5"></td>
+                        <td class="tg1-end" id="club_red6"></td>
+                        <td class="tg1-end" id="club_red7"></td>
+                        <td class="tg1-end" id="club_red8"></td>
+                        <td class="tg1-end" id="club_red9"></td>
+                        <td class="tg1-end" id="club_red10"></td>
+                        <td class="tg1-end" id="club_red11"></td>
+                        <td class="tg1-end" id="club_red12"></td>
+                        <td class="tg1-end" id="club_red13"></td>
+                        <td class="tg1-end" id="club_red14"></td>
+                        <td class="tg1-end" id="club_red15"></td>
+                        <td class="tg1-end" id="club_red16"></td>
+                    </tr>
+                    <tr>
+                        <td class="tg1-score"></td>
+                        <td class="tg1-score">1</td>
+                        <td class="tg1-score">2</td>
+                        <td class="tg1-score">3</td>
+                        <td class="tg1-score">4</td>
+                        <td class="tg1-score">5</td>
+                        <td class="tg1-score">6</td>
+                        <td class="tg1-score">7</td>
+                        <td class="tg1-score">8</td>
+                        <td class="tg1-score">9</td>
+                        <td class="tg1-score">10</td>
+                        <td class="tg1-score">11</td>
+                        <td class="tg1-score">12</td>
+                        <td class="tg1-score">13<br></td>
+                        <td class="tg1-score">14</td>
+                        <td class="tg1-score">15</td>
+                        <td class="tg1-score">16</td>
+                    </tr>
+                    <tr>
+                        <td class="tg1-yellow"></td>
+                        <td class="tg1-end" id="club_yel1"></td>
+                        <td class="tg1-end" id="club_yel2"></td>
+                        <td class="tg1-end" id="club_yel3"></td>
+                        <td class="tg1-end" id="club_yel4"></td>
+                        <td class="tg1-end" id="club_yel5"></td>
+                        <td class="tg1-end" id="club_yel6"></td>
+                        <td class="tg1-end" id="club_yel7"></td>
+                        <td class="tg1-end" id="club_yel8"></td>
+                        <td class="tg1-end" id="club_yel9"></td>
+                        <td class="tg1-end" id="club_yel10"></td>
+                        <td class="tg1-end" id="club_yel11"></td>
+                        <td class="tg1-end" id="club_yel12"></td>
+                        <td class="tg1-end" id="club_yel13"></td>
+                        <td class="tg1-end" id="club_yel14"></td>
+                        <td class="tg1-end" id="club_yel15"></td>
+                        <td class="tg1-end" id="club_yel16"></td>
+                    </tr>
+                </table>
+            </div>
+            <div id="tv_scoreboard">
+                <table class="tg2">
+                    <tr>
+                        <th class="tg2-sheet">Sheet 1</th>
+                        <th class="tg2-cell">1</th>
+                        <th class="tg2-cell">2</th>
+                        <th class="tg2-cell">3</th>
+                        <th class="tg2-cell">4</th>
+                        <th class="tg2-cell">5</th>
+                        <th class="tg2-cell">6</th>
+                        <th class="tg2-cell">7</th>
+                        <th class="tg2-cell">8</th>
+                        <th class="tg2-cell">Total<br></th>
+                    </tr>
+                    <tr>
+                        <td class="tg2-red"></td>
+                        <td class="tg2-cell" id="tv_red1"></td>
+                        <td class="tg2-cell" id="tv_red2"></td>
+                        <td class="tg2-cell" id="tv_red3"></td>
+                        <td class="tg2-cell" id="tv_red4"></td>
+                        <td class="tg2-cell" id="tv_red5"></td>
+                        <td class="tg2-cell" id="tv_red6"></td>
+                        <td class="tg2-cell" id="tv_red7"></td>
+                        <td class="tg2-cell" id="tv_red8"></td>
+                        <td class="tg2-cell" id="tv_redtotal"></td>
+                    </tr>
+                    <tr>
+                        <td class="tg2-yellow"></td>
+                        <td class="tg2-cell" id="tv_yel1"></td>
+                        <td class="tg2-cell" id="tv_yel2"></td>
+                        <td class="tg2-cell" id="tv_yel3"></td>
+                        <td class="tg2-cell" id="tv_yel4"></td>
+                        <td class="tg2-cell" id="tv_yel5"></td>
+                        <td class="tg2-cell" id="tv_yel6"></td>
+                        <td class="tg2-cell" id="tv_yel7"></td>
+                        <td class="tg2-cell" id="tv_yel8"></td>
+                        <td class="tg2-cell" id="tv_yeltotal"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
 <script src="https://d3js.org/d3.v5.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"></script>
 <script>
 
+
+
+// ============================================================================
+// CURLING
+// ============================================================================
 var CLICK_DISTANCE = 4,
     CLICK_DISTANCE_2 = CLICK_DISTANCE * CLICK_DISTANCE;
 
-var curling = d3.select('body');
+var curling = d3.select('#curling');
 var width = 500,
     height = 1000,
     sixfeet = width / 2 *0.9,
@@ -24,7 +190,10 @@ var width = 500,
     rockradius = rockwidth/2,
     rockoutline = rockwidth/5,
     spacer = rockwidth/4,
-    svg_rockradius = rockradius + rockoutline/2;
+    svg_rockradius = rockradius + rockoutline/2.
+    linewidth = 2,
+    backline_pos = sixfeet,
+    score_flag = false;
 
 var radii = {
     "twelve": sixfeet,
@@ -49,14 +218,15 @@ for (let i = 1; i <= 8; ++i) {
 
     x = width - rockwidth * col - spacer * (i%2) + 1
     y = rockwidth * row + spacer * (row-1)
-    rocks.push({x: x, y: y, name: `yel${i}`, color: "yellow", id: i+8})       
+    rocks.push({x: x, y: y, name: `yel${i}`, color: "yellow", id: i+8})
 }
+var reset = _.cloneDeep(rocks)
 
 var measures = []
 
 var house = []
 cx = width/2
-cy = radii.twelve + sixfeet
+cy = radii.twelve + backline_pos
 for (r in radii) {
     house.push({r: r, cx: cx, cy: cy, })
 }
@@ -66,10 +236,16 @@ var svg = curling.append("svg")
     .attr("width", width)
     .attr("height", height)
     .append("g")
-    .attr("class", "house")
+    .attr("class", "curling")
+
+// bottom layer
+var layer1 = svg.append('g')
+var layer2 = svg.append('g')
+var layer3 = svg.append('g')
+//top layer
 
 //sheet
-svg.append("rect")
+layer1.append("rect")
     .attr("class", "sheet")
     .attr("width", width)
     .attr("height", height)
@@ -77,17 +253,41 @@ svg.append("rect")
     .attr("y", 0)
     .style("fill", "white")
 
-var backline = 2
-svg.append("line")
-    .name()
+// backline
+layer1.append("line")
+    .attr("name", "backline")
+    .attr("class", "house")
     .attr("x1", 0)
     .attr("y1", sixfeet)
     .attr("x2", width)
-    .attr("y2", sixfeet)
+    .attr("y2", backline_pos)
     .style("stroke", "black")
-    .style("stroke-width", backline)
+    .style("stroke-width", linewidth)
 
-svg.append("circle")
+// left 4 foot
+layer1.append("line")
+    .attr("name", "centerline")
+    .attr("class", "house")
+    .attr("x1", pin.x - radii.four)
+    .attr("y1", pin.y)
+    .attr("x2", pin.x - radii.four)
+    .attr("y2", height)
+    .style("stroke", "black")
+    .style("stroke-width", linewidth)
+
+// right 4 foot
+layer1.append("line")
+    .attr("name", "centerline")
+    .attr("class", "house")
+    .attr("x1", pin.x + radii.four)
+    .attr("y1", pin.y)
+    .attr("x2", pin.x + radii.four)
+    .attr("y2", height)
+    .style("stroke", "black")
+    .style("stroke-width", linewidth)
+
+// 12 foot
+layer1.append("circle")
     .attr("name", "twelve")
     .attr("class", "house")
     .attr("r", radii.twelve)
@@ -96,7 +296,8 @@ svg.append("circle")
     .style("fill", "blue")
     .style("stroke", "black")
 
-svg.append("circle")
+// 8 foot
+layer1.append("circle")
     .attr("name", "eight")
     .attr("class", "house")
     .attr("r", radii.eight)
@@ -105,7 +306,8 @@ svg.append("circle")
     .style("fill", "white")
     .style("stroke", "black")
 
-svg.append("circle")
+// 4 foot
+layer1.append("circle")
     .attr("name", "four")
     .attr("class", "house")
     .attr("r", radii.four)
@@ -114,10 +316,30 @@ svg.append("circle")
     .style("fill", "red")
     .style("stroke", "black")
 
-svg.append("line")
+// t line
+layer1.append("line")
+    .attr("name", "tline")
+    .attr("class", "house")
+    .attr("x1", 0)
+    .attr("y1", pin.y)
+    .attr("x2", width)
+    .attr("y2", pin.y)
+    .style("stroke", "black")
+    .style("stroke-width", linewidth)
 
+// center line
+layer1.append("line")
+    .attr("name", "centerline")
+    .attr("class", "house")
+    .attr("x1", pin.x)
+    .attr("y1", 0)
+    .attr("x2", pin.x)
+    .attr("y2", height)
+    .style("stroke", "black")
+    .style("stroke-width", linewidth)
 
-svg.append("circle")
+// button
+layer1.append("circle")
     .attr("name", "button")
     .attr("class", "house")
     .attr("r", radii.button)
@@ -131,12 +353,15 @@ updateRocks(rocks)
 
 
 function updateRocks(rocks) {
-    svg.selectAll(".rock")
+    const t = d3.transition()
+        .duration(50);
+
+    layer3.selectAll(".rock")
         .data(rocks, d=>d.id)
         .join(
             enter => {
                 enter.append("circle")
-                    .attr("class", "rock")
+                    .attr("class", d => `rock ${d.color}`)
                     .attr("name", d => d.name)
                     .attr("id", d => d.id)
                     .attr("r", rockradius)
@@ -153,9 +378,11 @@ function updateRocks(rocks) {
                     );
             },
             update => {
-                update
+                update.call(update => update.transition(t)
                     .attr("cx", d => d.x)
                     .attr("cy", d => d.y)
+                    .style("fill", d => d.color)
+                )
             },
             exit => exit.remove()
         )   
@@ -165,7 +392,7 @@ function updateMeasures(measures) {
     const t = d3.transition()
         .duration(750);
 
-    svg.selectAll(".measure")
+    layer2.selectAll(".measure")
         .data(measures, d => d.id)
         .join(
             enter => {
@@ -179,14 +406,26 @@ function updateMeasures(measures) {
                     .style("stroke", d => {
                         if (d.color == "red") {
                             return "maroon"
-                        } else {
+                        } else if (d.color == "yellow") {
                             return "darkgoldenrod"
+                        } else {
+                            return "grey"
                         }
                     })
                     .style("stroke-width", 2);
             },
             update => {
-                update.attr("r", d => d.r)
+                update
+                    .attr("r", d => d.r)
+                    .style("stroke", d => {
+                        if (d.color == "red") {
+                            return "maroon"
+                        } else if (d.color == "yellow") {
+                            return "darkgoldenrod"
+                        } else {
+                            return "grey"
+                        }
+                    })
             },
             exit => {
                 exit.remove()
@@ -199,8 +438,16 @@ function clicked(d, i) {
 }
 
 function dragstarted(d) {
-  d.startX = d3.event.sourceEvent.clientX;
-  d.startY = d3.event.sourceEvent.clientY;
+    d.startX = d3.event.sourceEvent.clientX;
+    d.startY = d3.event.sourceEvent.clientY;
+
+    if (score_flag) {
+        rocks.forEach((e) => e.name.includes("red") ? e.color = "red" : e.color = "yellow")
+        measures.forEach((e) => e.color = rocks[find(rocks, r => r.id == e.id)].color)
+        updateRocks(rocks)
+        updateMeasures(measures)
+        score_flag = false;
+    }
 }
 
 function dragged(d) {
@@ -244,10 +491,71 @@ function dragended(d) {
 var rockDist = (rock) => Math.sqrt((pin.x - rock.x)**2 + (pin.y - rock.y)**2)
 
 var rockInHouse = function(rock) {
+    // rock is in house if any part of it is touching the house
     if (rockDist(rock) <= radii.twelve + svg_rockradius) {
         return true
     }
     return false
+}
+
+var rockInPlay = function(rock) {
+    // rock is in play if any part of it is over the backline
+    // if hogline is added, entire rock must be over hogline to be in play
+    if (rock.y + svg_rockradius > backline_pos){
+        return true
+    }
+    return false
+}
+
+var scoreSort = function(r0, r1) {
+    // find dist if rocks in house or set to high val for sorting
+    let r0_dist = rockInHouse(r0) ? rockDist(r0) : Number.MAX_VALUE
+    let r1_dist = rockInHouse(r1) ? rockDist(r1) : Number.MAX_VALUE
+    if (r0_dist < r1_dist) {
+        return -1
+    }
+    if (r0_dist > r1_dist) {
+        return 1
+    }
+    return 0
+}
+
+// https://stackoverflow.com/a/18520276/13254229
+function find(arr, test, ctx) {
+    var result = null;
+    arr.some(function(el, i) {
+        return test.call(ctx, el, i, arr) ? ((result = i), true) : false;
+    });
+    return result;
+}
+
+// ============================================================================
+// CONTROLS
+// ============================================================================
+
+function reset_click() {
+    rocks = _.cloneDeep(reset)
+    measures = []
+    updateRocks(rocks)
+    updateMeasures(measures)
+}
+function score_click() {
+    let order = rocks.sort(scoreSort)
+    let first = order[0]
+    let first_nonscoring = find(order, r => r.color != first.color)
+    order.forEach((e,i) => {
+        if (rockInPlay(e)) {
+            if (i >= first_nonscoring) {
+                m = find(measures, m => m.id == e.id)
+
+                e.color = "grey"
+                measures[m].color = "grey"
+            }
+        }
+    })
+    updateRocks(order)
+    updateMeasures(measures)
+    score_flag = true;
 }
 
 </script>

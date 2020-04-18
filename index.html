@@ -6,7 +6,7 @@
 body {
     background: #222;
     font-family: sans-serif;
-    /*font-style: italic;*/
+    font-size: 14px;
 }
 
 /*===========================================================================*/
@@ -15,9 +15,16 @@ body {
 
 #curling, #controls, #club_scoreboard {padding-top: 10px;}
 
+#club_scoreboard {
+    background-clip: content-box;
+    background-color: white;
+}
+
 #tv_scoreboard {
     padding-top: 10px;
     padding-bottom: 10px;
+    background-clip: content-box;
+    background-color: white;
 }
 
 .instructions {
@@ -31,22 +38,21 @@ body {
     font-weight: bold;
 }
 
-.help.highlight {background-color: yellow;}
+.help.highlight, .scoreboard.highlight {background-color: rgba(255,255,0,0.9) !important;}
 
 .rock.highlight {fill: cyan !important;}
 
-[name="backline"].highlight, [name="tline"].highlight {
+[name="backline"].highlight, [name="tline"].highlight, [name="centerline"].highlight {
     stroke-width: 5 !important;
-    stroke: cyan;
+    stroke: cyan !important;
 }
 
 [name="hogline"].highlight {
-    stroke: cyan;
+    stroke-width: 10 !important;
+    stroke: cyan !important;
 }
 
-circle.house.highlight {
-    fill: rgba(0,255,255,0.5);
-}
+circle.house.highlight {fill: rgba(0,255,255,0.5);}
 
 circle[name="pin"].highlight {
     fill: cyan !important;
@@ -54,36 +60,39 @@ circle[name="pin"].highlight {
     stroke: cyan;
 }
 
+input.highlight {background-color: yellow; color: black;}
+input {margin-bottom: 10px !important;}
+
+ul ul { margin-top: 0px; font-size: 12px;}
+
 ul {margin-top: -15px;}
 
-/*span {margin-left: -5px;}*/
+p {margin-left: 10px;}
 
-p {padding-left: 10px;}
+p, ul, li, span {cursor: default;}
 
-p, ul, li, span {
-    cursor: default;
-}
+.blank {background-color: black; color: white;}
 
 /*===========================================================================*/
 /*SCOREBOARD CLASSES*/
 /*===========================================================================*/
 
 .tg1  {border-collapse:collapse;border-spacing:0;background-color:white;}
-.tg1 td{font-family:Arial, sans-serif;font-size:14px;padding:10px 10px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-.tg1 th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 10px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-.tg1 .tg1-red{background-color:#ff0000;text-align:left;vertical-align:top}
-.tg1 .tg1-yellow{background-color:#ffff00;text-align:left;vertical-align:top}
-.tg1 .tg1-end{text-align:center;vertical-align:top}
-.tg1 .tg1-score{text-align:center;vertical-align:top}
-.tg1 .tg1-sheet{text-align:left;vertical-align:top}
+.tg1 td{font-family:Arial, sans-serif;font-size:14px;padding:0px 0px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;width: 30px; height: 30px}
+.tg1 th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:0px 0px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg1 .tg1-red{background-color:#ff0000;text-align:left;vertical-align:middle}
+.tg1 .tg1-yellow{background-color:#ffff00;text-align:left;vertical-align:middle}
+.tg1 .tg1-end{text-align:center;vertical-align:middle}
+.tg1 .tg1-score{text-align:center;vertical-align:middle}
+.tg1 .tg1-sheet{text-align:left;vertical-align:middle}
 
 .tg2  {border-collapse:collapse;border-spacing:0;background-color:white;}
-.tg2 td{font-family:Arial, sans-serif;font-size:14px;padding:10px 10px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
-.tg2 th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 10px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg2 td{font-family:Arial, sans-serif;font-size:14px;padding:0px 0px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;width: 30px; height: 30px}
+.tg2 th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:0px 0px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
 .tg2 .tg2-yellow{background-color:#ffff00;border-color:#000000;text-align:left;vertical-align:middle}
-.tg2 .tg2-baqh{text-align:center;vertical-align:top}
-.tg2 .tg2-sheet{border-color:#000000;text-align:left;vertical-align:middle}
-.tg2 .tg2-cell{border-color:#000000;text-align:center;vertical-align:middle}
+.tg2 .tg2-total{text-align:center;vertical-align:middle; width: 35px;}
+.tg2 .tg2-sheet{border-color:#000000;text-align:left;vertical-align:middle; width: 50px;}
+.tg2 .tg2-end, .tg2 .tg2-score{border-color:#000000;text-align:center;vertical-align:middle}
 .tg2 .tg2-red{background-color:#ff0000;border-color:#000000;text-align:left;vertical-align:middle}
 
 /*===========================================================================*/
@@ -92,9 +101,13 @@ p, ul, li, span {
 
 .rock {stroke: grey;}
 
-.rock.red, .house.red {fill: red;}
+.rock.red {fill: red;}
+
+.house.red {fill : rgba(255, 0, 0, 0.4);}
 
 .rock.yellow {fill: yellow;}
+
+.blue {fill: rgba(0, 0, 255, 0.4);}
 
 .no-sit {filter: brightness(50%);}
 
@@ -102,13 +115,13 @@ p, ul, li, span {
 
 .line {stroke: black;}
 
-.blue {fill: blue;}
+.house.line {stroke: rgba(0,0,0,0.4);}
 
 .white {fill: white;}
 
-.measure.red {stroke: maroon;} 
+.measure.red {stroke: red;} 
 
-.measure.yellow {stroke: darkgoldenrod;}
+.measure.yellow {stroke: yellow;}
 
 .measure.no-score {stroke: grey;}
 
@@ -121,9 +134,12 @@ p, ul, li, span {
         <div class="row">
             <div class="col-lg-1" align="right">
                 <div id="controls" >
-                    <input type="button" value="Reset" onclick="reset_click()">
-                    <br>
-                    <input type="button" value="Score" onclick="score_click()">
+                    <div id="row">
+                        <input type="button" class="btn btn-primary reset" value="Reset" onclick="reset_click()">
+                    <!-- </div>
+                    <div id="row"> -->
+                        <input type="button" class="btn btn-primary score" value="Score" onclick="score_click()">
+                    </div>
                 </div>
             </div>
 
@@ -133,14 +149,15 @@ p, ul, li, span {
         
             <div class="col-lg-7">
                 <div class="row">
-                    <div id="club_scoreboard">
-                        <table class="tg1">
+                    <div id="club_scoreboard" class="scoreboard">
+                        Club Scoreboard: Ends are placed to represent cumulative score
+                        <table class="tg1" cellpadding="100">
                             <tr>
                             <th class="tg1-sheet" colspan="17">Sheet 1</th>
                             </tr>
                             <tr>
                                 <td class="tg1-red"></td>
-                                <td class="tg1-end" id="club_red1"><!-- <img src="images/hammer.jpeg" style="width: 10px; height: 10px"  title="This team has hammer for this end which means they throw the last rock. The team the does not score gets hammer in the following end"> --></td>
+                                <td class="tg1-end" id="club_red1"></td>
                                 <td class="tg1-end" id="club_red2"></td>
                                 <td class="tg1-end" id="club_red3"></td>
                                 <td class="tg1-end" id="club_red4"></td>
@@ -199,63 +216,97 @@ p, ul, li, span {
                     </div>
                 </div>
                 <div class="row">
-                    <div id="tv_scoreboard">
+                    <div id="tv_scoreboard" class="scoreboard">
+                        TV Scoreboard: Shows points per end
                         <table class="tg2">
                             <tr>
                                 <th class="tg2-sheet">Sheet 1</th>
-                                <th class="tg2-cell">1</th>
-                                <th class="tg2-cell">2</th>
-                                <th class="tg2-cell">3</th>
-                                <th class="tg2-cell">4</th>
-                                <th class="tg2-cell">5</th>
-                                <th class="tg2-cell">6</th>
-                                <th class="tg2-cell">7</th>
-                                <th class="tg2-cell">8</th>
-                                <th class="tg2-cell">Total<br></th>
+                                <th class="tg2-end">1</th>
+                                <th class="tg2-end">2</th>
+                                <th class="tg2-end">3</th>
+                                <th class="tg2-end">4</th>
+                                <th class="tg2-end">5</th>
+                                <th class="tg2-end">6</th>
+                                <th class="tg2-end">7</th>
+                                <th class="tg2-end">8</th>
+                                <th class="tg2-end">Total<br></th>
                             </tr>
                             <tr>
                                 <td class="tg2-red"></td>
-                                <td class="tg2-cell" id="tv_red1"></td>
-                                <td class="tg2-cell" id="tv_red2"></td>
-                                <td class="tg2-cell" id="tv_red3"></td>
-                                <td class="tg2-cell" id="tv_red4"></td>
-                                <td class="tg2-cell" id="tv_red5"></td>
-                                <td class="tg2-cell" id="tv_red6"></td>
-                                <td class="tg2-cell" id="tv_red7"></td>
-                                <td class="tg2-cell" id="tv_red8"></td>
-                                <td class="tg2-cell" id="tv_redtotal"></td>
+                                <td class="tg2-score" id="tv_red1"></td>
+                                <td class="tg2-score" id="tv_red2"></td>
+                                <td class="tg2-score" id="tv_red3"></td>
+                                <td class="tg2-score" id="tv_red4"></td>
+                                <td class="tg2-score" id="tv_red5"></td>
+                                <td class="tg2-score" id="tv_red6"></td>
+                                <td class="tg2-score" id="tv_red7"></td>
+                                <td class="tg2-score" id="tv_red8"></td>
+                                <td class="tg2-score" id="tv_redtotal"></td>
                             </tr>
                             <tr>
                                 <td class="tg2-yellow"></td>
-                                <td class="tg2-cell" id="tv_yel1"></td>
-                                <td class="tg2-cell" id="tv_yel2"></td>
-                                <td class="tg2-cell" id="tv_yel3"></td>
-                                <td class="tg2-cell" id="tv_yel4"></td>
-                                <td class="tg2-cell" id="tv_yel5"></td>
-                                <td class="tg2-cell" id="tv_yel6"></td>
-                                <td class="tg2-cell" id="tv_yel7"></td>
-                                <td class="tg2-cell" id="tv_yel8"></td>
-                                <td class="tg2-cell" id="tv_yeltotal"></td>
+                                <td class="tg2-score" id="tv_yel1"></td>
+                                <td class="tg2-score" id="tv_yel2"></td>
+                                <td class="tg2-score" id="tv_yel3"></td>
+                                <td class="tg2-score" id="tv_yel4"></td>
+                                <td class="tg2-score" id="tv_yel5"></td>
+                                <td class="tg2-score" id="tv_yel6"></td>
+                                <td class="tg2-score" id="tv_yel7"></td>
+                                <td class="tg2-score" id="tv_yel8"></td>
+                                <td class="tg2-total" id="tv_yeltotal"></td>
                             </tr>
                         </table>
                     </div>
                 </div>
                 <div class="row instructions">
                     <p>
-                        How to use the visualization and general curling knowledge:
-                        <ul>
-                            <li>Hovering over any <span class="help" id="tut_help">bold or colored text</span> in this section will highlight the subject of the text.</li>
-                            <li><span class="help" id=tut_rock>Rocks</span> can be moved by clicking and dragging.</li>
-                            <li>A rock enters play when it completely crosses the <span class="help" id="tut_hogline">hogline</span> or comes into contact with another rock.</li>
-                            <li>A rock is considered to be in play until it completely crosses the <span class="help" id="tut_backline">backline</span>.</li>
-                            <li>If any part of a rock is touching the <span class="help" id="tut_house">house</span> then it is considered to be inside the house.</li>
-                            <li>Rocks inside the house are called draws.</li>
-                            <li>If only part of a rock is inside the house it is called a biter.</li>
-                            <li>Rocks outside of the house and in front of the <span class="help" id="tut_tline">tee line</span> are called guards.</li>
-                            <li>When a rock is dragged inside the house, a circle will appear to help compare the distance from each rock to the <span class="help" id="tut_pin"> pin.</li>
-                        </ul>
-
+                        How to use the visualization:
                     </p>
+                    <ul>
+                        <li>Hovering over any <span class="help tut-help">bold colored text</span> in this section will highlight the subject of the text.</li>
+                        <li><span class="help tut-rock">Rocks</span> can be moved by clicking and dragging.</li>
+                        <li>
+                            When a rock is dragged inside the <span class="help tut-house">house</span>, a circle will appear to help compare the distance 
+                            from each rock to the <span class="help tut-pin">pin</span>, or the center of the house.
+                        </li>
+                        <li>Rocks that are not <span class="help tut-sit">sitting</span> are darkened for clarity.</li>
+                        <li>The <span class="help tut-reset">reset button</span> returns the rocks to their original positions and resets the scoreboards.</li>
+                        <li>The <span class="help tut-score">score button</span> determines the score and updates the <span class="help tut-scoreboard">scoreboards</span>.</li>
+                        <ul>
+                            <li>Non-scoring rocks are greyed out</li>
+                            <li>On the club scoreboard, the score is tracked by placing the number of the end</li>
+                            <ul>
+                                <li>Blank ends are placed to the far right and are highlighted</li>
+                            </ul>
+                            <li>The TV score board works like a normal scoreboard</li>
+                        </ul>
+                    </ul>
+                    <p>
+                        General curling knowledge:
+                    </p>
+                    <ul>
+                        <li>The "rink" that curling is played on is called a sheet.</li>
+                        <li>The concentric rings forming a target is known as the <span class="help tut-house">house</span>.
+                        <ul>
+                            <li>
+                                The house consists of 3 rings with diameters of 
+                                <span class="help tut-12">12 feet</span>, 
+                                <span class="help tut-8">8 feet</span>, and
+                                <span class="help tut-4">4 feet</span>.
+                            </li>
+                            <li>The innermost circle is called the <span class="help tut-button">button</span></li>
+                            <li>The <span class="help tut-pin">pin</span> is at the very center of the house.</li>
+                        </ul>
+                        <li>The <span class="help tut-backline">backline</span> is tangent to the back of the house.</li>
+                        <li>The <span class="help tut-tline">tee line</span> bisects the house horizontally.</li>
+                        <li>The <span class="help tut-centerline">center line</span> runs lengthwise down the center of the ice.</li>
+                        <li>A rock enters play when it completely crosses the <span class="help tut-hogline">hogline</span> or comes into contact with another rock.</li>
+                        <li>A rock is considered to be in play until it completely crosses the <span class="help tut-backline">backline</span>.</li>
+                        <li>Rocks inside the house are called draws.</li>
+                        <li>If only part of a rock is inside the house it is called a biter.</li>
+                        <li>Rocks outside of the house and in front of the <span class="help tut-tline">tee line</span> are called guards.</li>
+                        <li>A rock is <span class="help tut-sit">sitting</span> when it is in the house and closer to the pin than any opposing rock.</li>
+                    </ul>
                 </div>
             </div>
 
@@ -263,7 +314,7 @@ p, ul, li, span {
 
         </div>
     </div>
-
+    <!-- <img src="images/hammer.jpeg" style="width: 10px; height: 10px"  title="This team has hammer for this end which means they throw the last rock. The team the does not score gets hammer in the following end"> -->
 </body>
 
 
@@ -290,7 +341,11 @@ var width = 350,
     linewidth = 2,
     backline_pos = sixfeet,
     hogline_width = sixfeet/18,
-    score_flag = false;
+    score_flag = false,
+    current_end = 1,
+    red_score = 0,
+    yel_score = 0
+    hammer = "red";
 
 var radii = {
     "twelve": sixfeet,
@@ -304,8 +359,8 @@ var pin = {
     ,"y": radii.twelve + sixfeet
 }
 
-var hogline_pos = pin.y + sixfeet * 7 / 2;
-console.log(hogline_pos)
+var hogline_pos = pin.y + sixfeet * 7 / 2,
+    fourfootline_pos = pin.y + Math.sqrt(radii.twelve**2-radii.four**2);
 
 var rocks = []
 var row = 0, col = 1;
@@ -342,6 +397,7 @@ var svg = curling.append("svg")
 var layer1 = svg.append('g')
 var layer2 = svg.append('g')
 var layer3 = svg.append('g')
+var layer4 = svg.append('g')
 //top layer
 
 //sheet
@@ -374,20 +430,20 @@ layer1.append("line")
 
 // left 4 foot
 layer1.append("line")
-    .attr("name", "centerline")
+    .attr("name", "fourfootline")
     .attr("class", "house line")
     .attr("x1", pin.x - radii.four)
-    .attr("y1", pin.y)
+    .attr("y1", fourfootline_pos)
     .attr("x2", pin.x - radii.four)
     .attr("y2", height)
     .style("stroke-width", linewidth)
 
 // right 4 foot
 layer1.append("line")
-    .attr("name", "centerline")
+    .attr("name", "fourfootline")
     .attr("class", "house line")
     .attr("x1", pin.x + radii.four)
-    .attr("y1", pin.y)
+    .attr("y1", fourfootline_pos)
     .attr("x2", pin.x + radii.four)
     .attr("y2", height)
     .style("stroke-width", linewidth)
@@ -455,12 +511,15 @@ layer1.append("circle")
 
 updateRocks(rocks)
 
+// ----------------------------------------------------------------------------
+// UPDATE FUNCTIONS
+// ----------------------------------------------------------------------------
 
 function updateRocks(rocks) {
     const t = d3.transition()
         .duration(50);
 
-    layer3.selectAll(".rock")
+    layer4.selectAll(".rock")
         .data(rocks, d=>d.id)
         .join(
             enter => {
@@ -483,6 +542,7 @@ function updateRocks(rocks) {
                 update.call(update => update.transition(t)
                     .attr("cx", d => d.x)
                     .attr("cy", d => d.y)
+                    // if rock is not sitting, add no-sit class (darkens rock); if not scoring, add no-score class (greys out rock)
                     .attr("class", d => `rock ${d.color}${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
                 )
             },
@@ -493,8 +553,31 @@ function updateRocks(rocks) {
 function updateMeasures(measures) {
     const t = d3.transition()
         .duration(750);
-
+    // add two measure circles, one slightly thicker black one, and a thinner one of the desired color
     layer2.selectAll(".measure")
+        .data(measures, d => d.id)
+        .join(
+            enter => {
+                enter.append("circle")
+                    .attr("class", d => `measure line`)
+                    .attr("id", d => d.id)
+                    .attr("r", d => d.r)
+                    .attr("cx", pin.x)
+                    .attr("cy", pin.y)
+                    .attr("fill", "none")
+                    .style("stroke-width", linewidth*1.2);
+            },
+            update => {
+                update
+                    .attr("r", d => d.r)
+                    // if rock is not sitting, add no-sit class (darkens circle); if not scoring, add no-score class (greys out circle)
+                    .attr("class", d => `measure line${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
+            },
+            exit => {
+                exit.remove()
+            }
+        )
+    layer3.selectAll(".measure")
         .data(measures, d => d.id)
         .join(
             enter => {
@@ -505,11 +588,12 @@ function updateMeasures(measures) {
                     .attr("cx", pin.x)
                     .attr("cy", pin.y)
                     .attr("fill", "none")
-                    .style("stroke-width", linewidth);
+                    .style("stroke-width", linewidth*0.7);
             },
             update => {
                 update
                     .attr("r", d => d.r)
+                    // if rock is not sitting, add no-sit class (darkens circle); if not scoring, add no-score class (greys out circle)
                     .attr("class", d => `measure ${d.color}${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
             },
             exit => {
@@ -517,6 +601,10 @@ function updateMeasures(measures) {
             }
         )
 }
+
+// ----------------------------------------------------------------------------
+// CALLBACKS
+// ----------------------------------------------------------------------------
 
 function clicked(d, i) {
     if (d3.event.defaultPrevented) return; // dragged
@@ -526,6 +614,7 @@ function dragstarted(d) {
     d.startX = d3.event.sourceEvent.clientX;
     d.startY = d3.event.sourceEvent.clientY;
 
+    // if rocks are greyed out from scoring, remove the no-score classes
     if (score_flag) {
         rocks.forEach((e) => e.score = true)
         measures.forEach((e) => e.score = true)
@@ -554,7 +643,7 @@ function dragged(d) {
             measure = measures.find(m => m.id == d.id)
             measure.r = r
         } else {
-            // ADD MEASURE CIRCLES TO DATA ARRAY
+            // add measure circles to data array
             measures.push({id: d.id, r: r, color: d.color, sitting:true, score: true})
         }
     } else {
@@ -604,6 +693,10 @@ function dragended(d) {
     d3.select(this).classed("active", false);
 }
 
+// ----------------------------------------------------------------------------
+// HELPERS
+// ----------------------------------------------------------------------------
+
 var rockDist = (rock) => Math.sqrt((pin.x - rock.x)**2 + (pin.y - rock.y)**2)
 
 var rockInHouse = function(rock) {
@@ -615,9 +708,8 @@ var rockInHouse = function(rock) {
 }
 
 var rockInPlay = function(rock) {
-    // rock is in play if any part of it is over the backline
-    // if hogline is added, entire rock must be over hogline to be in play
-    if (rock.y + svg_rockradius > backline_pos){
+    // rock is in play if it has completely crossed the hogline, and not completely crossed the backline
+    if (rock.y + svg_rockradius > backline_pos && rock.y + svg_rockradius < hogline_pos - hogline_width/2){
         return true
     }
     return false
@@ -650,6 +742,13 @@ function find(arr, test, ctx) {
 // ============================================================================
 
 function reset_click() {
+    // reset scoreboards
+    red_score = 0
+    yellow_score = 0
+    current_end = 0
+    $(".tg1-end").find("span").remove()
+    $(".tg2-score").text("")
+    // reset rocks
     rocks = _.cloneDeep(reset)
     measures = []
     updateRocks(rocks)
@@ -658,12 +757,13 @@ function reset_click() {
 function score_click() {
     let order = rocks.sort(scoreSort)
     let first = order[0]
-    let first_nonscoring = find(order, r => r.color != first.color)
+    let first_nonscoring = find(order, r => r.color != first.color || !rockInHouse(r))
+
+    // grey out rocks that are not scoring
     order.forEach((e,i) => {
         if (rockInPlay(e)) {
             if (i >= first_nonscoring) {
                 m = find(measures, m => m.id == e.id)
-
                 e.score = false
                 if (rockInHouse(e)) {
                     measures[m].score = false
@@ -671,71 +771,90 @@ function score_click() {
             }
         }
     })
+    
+    let score = rockInPlay(first) ? first_nonscoring : 0
+
+    if (score > 0) {
+        // determine which team scored and increment scores
+        var scoring_team = first.color
+        let team_abbr = scoring_team.slice(0,3)
+        if (scoring_team == "red") {
+            red_score += score
+        } else {
+            yel_score += score
+        }
+        // update club scoreboard
+        $(`#club_scoreboard #club_${team_abbr}${scoring_team == "red" ? red_score : yel_score}`).append(`<span class="club-score">${current_end}</span>`)
+        // update tv scoreboard
+        $(`#tv_scoreboard #tv_${team_abbr}${current_end}`).text(score)
+        $(`#tv_scoreboard #tv_${team_abbr == "red" ? "yel" : "red"}${current_end}`).text(0)
+    } else { // blank end
+        // update club scoreboard
+        $(`#club_scoreboard #club_${hammer}16`).append(`<span class="blank">${current_end}</span>`)
+        // update tv scoreboard
+        $(`#tv_scoreboard #tv_red${current_end}`).text(score)
+        $(`#tv_scoreboard #tv_yel${current_end}`).text(score)
+    }
+
+    $(`#tv_scoreboard #tv_redtotal`).text(red_score)
+    $(`#tv_scoreboard #tv_yeltotal`).text(yel_score)
+    
+    score_flag = true;
+    if (score == 0) {
+        // hammer doesn't change
+    } else {
+        // set hammer to the team that didn't score
+        hammer = scoring_team == "red" ? "yel" : "red";
+    }
+    current_end++;
+
     updateRocks(order)
     updateMeasures(measures)
-    score_flag = true;
 }
 
 // ============================================================================
 // TUTORIAL
 // ============================================================================
+var highlight_arr = [
+    {class:".tut-help", selector:".help"},
+    {class:".tut-rock", selector:".rock"},
+    {class:".tut-hogline", selector:"line[name=hogline]"},
+    {class:".tut-backline", selector:"line[name=backline]"},
+    {class:".tut-tline", selector:"line[name=tline]"},
+    {class:".tut-centerline", selector:"line[name=centerline]"},
+    {class:".tut-house", selector:"circle.house"},
+    {class:".tut-12", selector:"circle[name=twelve]"},
+    {class:".tut-8", selector:"circle[name=eight]"},
+    {class:".tut-4", selector:"circle[name=four]"},
+    {class:".tut-8", selector:"circle[name=eight]"},
+    {class:".tut-button", selector:"circle[name=button]"},
+    {class:".tut-sit", selector:""},
+    {class:".tut-reset", selector:".reset"},
+    {class:".tut-score", selector:".score"},
+    {class:".tut-scoreboard", selector:".scoreboard"}
+]
 
-// tutorial
-$("#tut_help").on("mouseenter", function(){
-    $(".help").addClass("highlight")
-});
-$("#tut_help").on("mouseleave", function(){
-    $(".help").removeClass("highlight")
-});
-
-// rocks
-$("#tut_rock").on("mouseenter", function(){
-    $(".rock").addClass("highlight")
-});
-$("#tut_rock").on("mouseleave", function(){
-    $(".rock").removeClass("highlight")
-});
-
-// hogline
-$("#tut_hogline").on("mouseenter", function(){
-    console.log($("line[name=hogline]"))
-    $("line[name=hogline]").addClass("highlight")
-});
-$("#tut_hogline").on("mouseleave", function(){
-    $("line[name=hogline]").removeClass("highlight")
-});
-
-// backline
-$("#tut_backline").on("mouseenter", function(){
-    $("line[name=backline]").addClass("highlight")
-});
-$("#tut_backline").on("mouseleave", function(){
-    $("line[name=backline]").removeClass("highlight")
+highlight_arr.forEach(e => {
+    $(e.class).on("mouseenter", function(){
+        $(e.selector).addClass("highlight")
+        $(e.class).addClass("highlight")
+    });
+    $(e.class).on("mouseleave", function(){
+        $(e.selector).removeClass("highlight")
+        $(e.class).removeClass("highlight")
+    });
 });
 
-// house
-$("#tut_house").on("mouseenter", function(){
-    $("circle.house").addClass("highlight")
-});
-$("#tut_house").on("mouseleave", function(){
-    $("circle.house").removeClass("highlight")
-});
-
-// t line
-$("#tut_tline").on("mouseenter", function(){
-    $("line[name=tline]").addClass("highlight")
-});
-$("#tut_tline").on("mouseleave", function(){
-    $("line[name=tline]").removeClass("highlight")
-});
-
-// house
-$("#tut_pin").on("mouseenter", function(){
+// pin 
+$(".tut-pin").on("mouseenter", function(){
     $("circle[name=pin]").attr("r", 2)
+    $(".tut-pin").addClass("highlight")
 });
-$("#tut_pin").on("mouseleave", function(){
+$(".tut-pin").on("mouseleave", function(){
     $("circle[name=pin]").attr("r", 0.125)
+    $(".tut-pin").removeClass("highlight")
 });
+
 
 
 </script>

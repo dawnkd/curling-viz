@@ -1,0 +1,122 @@
+
+body {
+    background: #222;
+    font-family: sans-serif;
+    font-size: 14px;
+}
+
+/*===========================================================================*/
+/*LAYOUT CLASSES*/
+/*===========================================================================*/
+
+#curling, #controls, #club_scoreboard {padding-top: 10px;}
+
+#club_scoreboard {
+    background-clip: content-box;
+    background-color: white;
+}
+
+#tv_scoreboard {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    background-clip: content-box;
+    background-color: white;
+}
+
+.instructions {
+    background-color: white;
+    font-style: normal;
+    width: 768px;
+}
+
+.help {
+    color: blue;
+    font-weight: bold;
+}
+
+.help.highlight, .scoreboard.highlight {background-color: rgba(255,255,0,0.9) !important;}
+
+.rock.highlight {fill: cyan !important;}
+
+[name="backline"].highlight, [name="tline"].highlight, [name="centerline"].highlight {
+    stroke-width: 5 !important;
+    stroke: cyan !important;
+}
+
+[name="hogline"].highlight {
+    stroke-width: 10 !important;
+    stroke: cyan !important;
+}
+
+circle.house.highlight {fill: rgba(0,255,255,0.5);}
+
+circle[name="pin"].highlight {
+    fill: cyan !important;
+    stroke-width: 100;
+    stroke: cyan;
+}
+
+input.highlight {background-color: yellow; color: black;}
+input {margin-bottom: 10px !important;}
+
+ul ul { margin-top: 0px; font-size: 12px;}
+
+ul {margin-top: -15px;}
+
+p {margin-left: 10px;}
+
+p, ul, li, span {cursor: default;}
+
+.blank {background-color: black; color: white;}
+
+/*===========================================================================*/
+/*SCOREBOARD CLASSES*/
+/*===========================================================================*/
+
+.tg1  {border-collapse:collapse;border-spacing:0;background-color:white;}
+.tg1 td{font-family:Arial, sans-serif;font-size:14px;padding:0px 0px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;width: 30px; height: 30px}
+.tg1 th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:0px 0px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg1 .tg1-red{background-color:#ff0000;text-align:left;vertical-align:middle}
+.tg1 .tg1-yellow{background-color:#ffff00;text-align:left;vertical-align:middle}
+.tg1 .tg1-end{text-align:center;vertical-align:middle}
+.tg1 .tg1-score{text-align:center;vertical-align:middle}
+.tg1 .tg1-sheet{text-align:left;vertical-align:middle}
+
+.tg2  {border-collapse:collapse;border-spacing:0;background-color:white;}
+.tg2 td{font-family:Arial, sans-serif;font-size:14px;padding:0px 0px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;width: 30px; height: 30px}
+.tg2 th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:0px 0px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:black;}
+.tg2 .tg2-yellow{background-color:#ffff00;border-color:#000000;text-align:left;vertical-align:middle}
+.tg2 .tg2-total{text-align:center;vertical-align:middle; width: 35px;}
+.tg2 .tg2-sheet{border-color:#000000;text-align:left;vertical-align:middle; width: 50px;}
+.tg2 .tg2-end, .tg2 .tg2-score{border-color:#000000;text-align:center;vertical-align:middle}
+.tg2 .tg2-red{background-color:#ff0000;border-color:#000000;text-align:left;vertical-align:middle}
+
+/*===========================================================================*/
+/*SVG CLASSES*/
+/*===========================================================================*/
+
+.rock {stroke: grey;}
+
+.rock.red {fill: red;}
+
+.house.red {fill : rgba(255, 0, 0, 0.4);}
+
+.rock.yellow {fill: yellow;}
+
+.blue {fill: rgba(0, 0, 255, 0.4);}
+
+.no-sit {filter: brightness(50%);}
+
+.rock.no-score {fill: grey;}
+
+.line {stroke: black;}
+
+.house.line {stroke: rgba(0,0,0,0.4);}
+
+.white {fill: white;}
+
+.measure.red {stroke: red;} 
+
+.measure.yellow {stroke: yellow;}
+
+.measure.no-score {stroke: grey;}

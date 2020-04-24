@@ -56,7 +56,9 @@ circle[name="pin"].highlight {
     stroke: cyan;
 }
 
-input.highlight {background-color: yellow; color: black;}
+.measure.highlight {stroke:cyan !important;}
+
+input.highlight, label.highlight {background-color: yellow; color: black;}
 input {margin-bottom: 10px !important;}
 
 ul ul { margin-top: 0px; font-size: 12px;}
@@ -67,7 +69,57 @@ p {margin-left: 10px;}
 
 p, ul, li, span {cursor: default;}
 
-.blank {background-color: black; color: white;}
+.blank {
+    border-radius: 2px;
+    background-color: grey;
+    color: white;
+    margin-right:1px;
+    padding: 2px;
+}
+
+.fade { background-color: rgba(0,255,255,0.5) }
+
+.noh {-moz-user-select: none; -webkit-user-select: none; -ms-user-select:none; user-select:none;-o-user-select:none;}
+
+/*
+from https://github.com/twbs/bootstrap/blob/master/dist/css/bootstrap.css o
+to mactch btn classes
+*/
+.checkbox{
+    display: inline-block;
+    font-weight: 400;
+    line-height: 1.5;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    vertical-align: middle;
+    cursor: default;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background-color: grey;
+    border: 1px solid grey;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.hide-measure {
+    stroke-width: 0px !important;
+}
+
+
+/*#button {
+    display: inline-block;
+    background: #ddd;
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    text-decoration: underline;
+    color: blue;
+    cursor: pointer;
+}*/
 
 /*===========================================================================*/
 /*SCOREBOARD CLASSES*/
@@ -95,19 +147,19 @@ p, ul, li, span {cursor: default;}
 /*SVG CLASSES*/
 /*===========================================================================*/
 
-.rock {stroke: grey;}
+.rock, .simRock {stroke: grey;}
 
-.rock.red {fill: red;}
+.rock.red, .simRock.red {fill: red;}
 
 .house.red {fill : rgba(255, 0, 0, 0.4);}
 
-.rock.yellow {fill: yellow;}
+.rock.yellow, .simRock.yellow {fill: yellow;}
 
 .blue {fill: rgba(0, 0, 255, 0.4);}
 
 .no-sit {filter: brightness(50%);}
 
-.rock.no-score {fill: grey;}
+.rock.no-score, .simRock.no-score {fill: grey;}
 
 .line {stroke: black;}
 

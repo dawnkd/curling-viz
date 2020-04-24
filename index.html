@@ -9,22 +9,29 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-lg-1" align="right">
+            <div class="col-lg-2" align="right">
                 <div id="controls" >
                     <div id="row">
-                        <input type="button" class="btn btn-primary reset" value="Reset" onclick="reset_click()">
-                    <!-- </div>
-                    <div id="row"> -->
-                        <input type="button" class="btn btn-primary score" value="Score" onclick="score_click()">
+                        <input type="button" class="btn btn-danger reset" value="Reset Rocks" onclick="resetRocks_click()">
+                        <input type="button" class="btn btn-danger reset" value="Reset Score" onclick="resetScore_click()">
+                        <input type="button" class="btn btn-success score" value="Record Score" onclick="score_click()">
+                        <input type="button" class="btn btn-warning" value="Switch Modes" onclick="switchModes_click()">
+                        <div style="display:none;" id="newRock-div">
+                            <input type="button" class="btn btn-success" value="New Rock" onclick="newRock_click()">
+                        </div>
+                        <label class="checkbox form-check-label" for="showMeasures" class="noh">
+                            <input type="checkbox" class="form-control-input" id="showMeasures" checked="checked" onchange="showMeasures_change()">
+                            Show Circles
+                        </label>
                     </div>
                 </div>
             </div>
 
-            <div class="col-lg-4">
+            <div class="col-lg-4" id=svgDiv>
                 <div id="curling"></div>
             </div>
         
-            <div class="col-lg-7">
+            <div class="col-lg-6">
                 <div class="row">
                     <div id="club_scoreboard" class="scoreboard">
                         Club Scoreboard: Ends are placed to represent cumulative score
@@ -143,12 +150,13 @@
                         <li>Hovering over any <span class="help tut-help">bold colored text</span> in this section will highlight the subject of the text.</li>
                         <li><span class="help tut-rock">Rocks</span> can be moved by clicking and dragging.</li>
                         <li>
-                            When a rock is dragged inside the <span class="help tut-house">house</span>, a circle will appear to help compare the distance 
-                            from each rock to the <span class="help tut-pin">pin</span>, or the center of the house.
+                            When a rock is dragged inside the <span class="help tut-house">house</span>, a <span class="help tut-measures">circle</span> will appear to help compare the distance 
+                            from each rock to the <span class="help tut-pin">pin</span> if the <span class="help tut-measures">Show Circles checkbox</span> is checked.
                         </li>
+
                         <li>Rocks that are not <span class="help tut-sit">sitting</span> are darkened for clarity.</li>
-                        <li>The <span class="help tut-reset">reset button</span> returns the rocks to their original positions and resets the scoreboards.</li>
-                        <li>The <span class="help tut-score">score button</span> determines the score and updates the <span class="help tut-scoreboard">scoreboards</span>.</li>
+                        <li>The <span class="help tut-reset">reset buttons</span> return the rocks to their original positions and reset the scoreboards respectively.</li>
+                        <li>The <span class="help tut-score">Record Score button</span> determines the score and updates the <span class="help tut-scoreboard">scoreboards</span>.</li>
                         <ul>
                             <li>Non-scoring rocks are greyed out</li>
                             <li>On the club scoreboard, the score is tracked by placing the number of the end</li>

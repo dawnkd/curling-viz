@@ -1,13 +1,14 @@
+
 // ============================================================================
-// CURLING
+// CURLING SVG
 // ============================================================================
 var CLICK_DISTANCE = 4,
     CLICK_DISTANCE_2 = CLICK_DISTANCE * CLICK_DISTANCE;
 
 var curling = d3.select('#curling');
 var width = 350,
-    height = width*2.6,
-    sixfeet = width / 2 *0.9,
+    height = width*2.4,
+    sixfeet = width * 0.38501052631,
     rockwidth = sixfeet / 6 * 10 / 12,
     rockradius = rockwidth/2,
     rockoutline = rockwidth/5,
@@ -54,19 +55,20 @@ var reset = _.cloneDeep(rocks)
 
 var measures = []
 
-var house = []
-cx = width/2
-cy = radii.twelve + backline_pos
-for (r in radii) {
-    house.push({r: r, cx: cx, cy: cy, })
-}
+// var house = []
+// cx = width/2
+// cy = radii.twelve + backline_pos
+// for (r in radii) {
+//     house.push({r: r, cx: cx, cy: cy, })
+// }
  
 
 var svg = curling.append("svg")
-    .attr("width", width)
+    .attr("width", 350)
     .attr("height", height)
     .append("g")
     .attr("class", "curling")
+    .attr("viewBox", `0 0 4.75 ${4.75*2.4}`)
 
 // bottom layer
 var layer1 = svg.append('g')
@@ -222,6 +224,11 @@ function updateRocks(rocks) {
                 )
             },
             exit => exit.remove()
+                // .call(exit => exit
+                //     .transition(t)
+                //     .attr("cx", d => d.color == "red" ? rockwidth*-2 : width + rockwidth*2)
+                //     .remove()
+                // )
         )   
 }
 
@@ -275,6 +282,8 @@ function updateMeasures(measures) {
                 exit.remove()
             }
         )
+
+    check_showCircles()
 }
 
 // ----------------------------------------------------------------------------
@@ -412,23 +421,186 @@ function find(arr, test, ctx) {
     return result;
 }
 
+function check_showCircles() {
+    let test = $("#showMeasures")[0].checked
+    if (test) {
+        $(".measure").removeClass("hide-measure")
+    } else {
+        $(".measure").addClass("hide-measure")
+    }
+}
+
+function switchTeams(team) {
+    return team == "red" ? "yellow" : "red"
+}
+
+// ============================================================================
+// SIMULATION
+// ============================================================================
+
+var teams = {"red":"red", "yel":"yellow"};
+var sim_rocks = [];
+var next_color = teams[hammer]
+var simRock_id = 100
+
+function newSimRock() {
+    let x = width/2
+    let y = hogline_pos - hogline_width/2 + svg_rockradius
+    sim_rocks.push({x: x, y: y, color: next_color, id: simRock_id, sitting: true, score: true})
+    simRock_id++;
+    next_color = switchTeams(next_color)
+}
+
+function updateSimRocks(sim_rocks) {
+    const t = d3.transition()
+        .duration(1000);
+
+    layer4.selectAll(".simRock")
+        .data(sim_rocks, d => d.id)
+        .join(
+            enter => {
+                enter.append("circle")
+                    .attr("class", d => `simRock ${d.color}`)
+                    .attr("name", d => d.name)
+                    .attr("id", d => d.id)
+                    .attr("r", rockradius)
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y)
+                    .style("stroke-width", rockoutline)
+                    .call(d3.drag()
+                        .clickDistance(CLICK_DISTANCE)
+                        .on("start", sim_dragstarted)
+                        .on("drag", sim_dragged)
+                        .on("end", sim_dragended)
+                    );
+            },
+            update => {
+                update.call(update => update.transition(t)
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y)
+                    // if rock is not sitting, add no-sit class (darkens rock); if not scoring, add no-score class (greys out rock)
+                    .attr("class", d => `simRock ${d.color}${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
+                )
+            },
+            exit => exit.remove()
+                // .call(exit => exit
+                //     .transition(t)
+                //     .attr("cx", d => d.color == "red" ? rockwidth*-2 : width + rockwidth*2)
+                //     .remove()
+                // )
+        )
+}
+
+// ----------------------------------------------------------------------------
+// sim callbacks
+// ----------------------------------------------------------------------------
+
+function sim_clicked(d, i) {
+    if (d3.event.defaultPrevented) return; // dragged
+}
+
+function sim_dragstarted(d) {
+    d.startX = d3.event.sourceEvent.clientX;
+    d.startY = d3.event.sourceEvent.clientY;
+
+    // if rocks are greyed out from scoring, remove the no-score classes
+    if (score_flag) {
+        sim_rocks.forEach((e) => e.score = true)
+        measures.forEach((e) => e.score = true)
+        updateSimRocks(sim_rocks)
+        updateMeasures(measures)
+        score_flag = false;
+    }
+}
+
+function sim_dragged(d) {
+    var e = d3.select(this),
+        dStartX = d.startX - d3.event.sourceEvent.clientX,
+        dStartY = d.startY - d3.event.sourceEvent.clientY;
+
+    if (dStartX * dStartX + dStartY * dStartY > CLICK_DISTANCE_2 &&
+        !e.classed("active")) {
+
+        e.raise().classed("active", true);
+    }
+    e.attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
+
+    if (rockInHouse(d)) {
+        r = rockDist(d) - svg_rockradius
+        // update radius or add measure circle around rock 
+        if (measures.some(m => m.id == d.id)){
+            measure = measures.find(m => m.id == d.id)
+            measure.r = r
+        } else {
+            // add measure circles to data array
+            measures.push({id: d.id, r: r, color: d.color, sitting:true, score: true})
+        }
+    } else {
+        // remove measure circle
+        measures = measures.filter(m => m.id != d.id)
+    }
+
+    // determine which rocks are sitting
+    let order = sim_rocks.sort(scoreSort)
+    let first = order[0]
+    let first_nonscoring = find(order, r => r.color != first.color)
+    order.forEach((e,i) => {
+        if (rockInPlay(e)) {
+            // darken rocks and measures that aren't sitting
+            if (i >= first_nonscoring) {
+                e.sitting = false
+                if (rockInHouse(e)) {
+                    m = find(measures, m => m.id == e.id)
+                    measures[m].sitting = false
+                }
+            }
+            else {
+                // don't darken rocks and measures that are sitting
+                e.sitting = rockInHouse(e)
+                
+                if (rockInHouse(e)) {
+                    m = find(measures, m => m.id == e.id)
+                    measures[m].sitting = true
+                }
+            }
+        } else { // don't darken rocks that aren't in play
+            e.sitting = true;
+        }
+    })
+
+    
+    updateSimRocks(order)
+    updateMeasures(measures)
+}
+
+function sim_dragended(d) {
+    const filter = (e) => e.id == d.id
+    let i = sim_rocks.findIndex(filter)
+    sim_rocks[i].x = d.x
+    sim_rocks[i].y = d.y
+    updateSimRocks(sim_rocks)
+    d3.select(this).classed("active", false);
+}
+
 // ============================================================================
 // CONTROLS
 // ============================================================================
 
-function reset_click() {
-    // reset scoreboards
-    red_score = 0
-    yellow_score = 0
-    current_end = 0
-    $(".tg1-end").find("span").remove()
-    $(".tg2-score").text("")
-    // reset rocks
+function resetRocks_click() {
     rocks = _.cloneDeep(reset)
     measures = []
     updateRocks(rocks)
     updateMeasures(measures)
 }
+
+function resetScore_click() {
+    red_score = 0
+    yellow_score = 0
+    current_end = 1
+    $(".tg1-end").find("span").remove()
+    $(".tg2-score").text("")
+}
+
 function score_click() {
     let order = rocks.sort(scoreSort)
     let first = order[0]
@@ -458,11 +630,22 @@ function score_click() {
         } else {
             yel_score += score
         }
+
+        let club_selector = `#club_scoreboard #club_${team_abbr}${scoring_team == "red" ? red_score : yel_score}`
+        let tv_selector = `#tv_scoreboard #tv_${team_abbr}${current_end}`
+
         // update club scoreboard
-        $(`#club_scoreboard #club_${team_abbr}${scoring_team == "red" ? red_score : yel_score}`).append(`<span class="club-score">${current_end}</span>`)
+        $(club_selector).append(`<span class="club-score">${current_end}</span>`)
         // update tv scoreboard
-        $(`#tv_scoreboard #tv_${team_abbr}${current_end}`).text(score)
+        $(tv_selector).text(score)
         $(`#tv_scoreboard #tv_${team_abbr == "red" ? "yel" : "red"}${current_end}`).text(0)
+
+        // let to_fade = `${club_selector}, ${tv_selector}`
+        // $(to_fade).addClass("fade")
+        // set
+
+
+
     } else { // blank end
         // update club scoreboard
         $(`#club_scoreboard #club_${hammer}16`).append(`<span class="blank">${current_end}</span>`)
@@ -473,6 +656,8 @@ function score_click() {
 
     $(`#tv_scoreboard #tv_redtotal`).text(red_score)
     $(`#tv_scoreboard #tv_yeltotal`).text(yel_score)
+
+    let selector = ``
     
     score_flag = true;
     if (score == 0) {
@@ -485,6 +670,40 @@ function score_click() {
 
     updateRocks(order)
     updateMeasures(measures)
+}
+
+function showMeasures_change() {
+    check_showCircles()
+}
+
+var mode = 0
+function switchModes_click() {
+    // enter simulation mode
+    if (mode == 0) {
+        $("#newRock-div").show()
+        // clear tutorial rocks
+        updateRocks([])
+        // add simulation rocks
+        updateSimRocks(sim_rocks)
+        updateMeasures()
+        next_color = teams[hammer]
+        mode = 1
+    }
+    // enter tutorial mode
+    else {
+        $("#newRock-div").hide()
+        updateRocks(rocks)
+        updateSimRocks([])
+        // sim_rocks = []
+        // simRock_id = 100
+        mode = 0
+    }
+    updateMeasures(measures)
+}
+
+function newRock_click() {
+    newSimRock()
+    updateSimRocks(sim_rocks)
 }
 
 // ============================================================================
@@ -506,7 +725,8 @@ var highlight_arr = [
     {class:".tut-sit", selector:""},
     {class:".tut-reset", selector:".reset"},
     {class:".tut-score", selector:".score"},
-    {class:".tut-scoreboard", selector:".scoreboard"}
+    {class:".tut-scoreboard", selector:".scoreboard"},
+    {class:".tut-measures", selector:".checkbox, .measure"},
 ]
 
 highlight_arr.forEach(e => {
@@ -529,3 +749,9 @@ $(".tut-pin").on("mouseleave", function(){
     $("circle[name=pin]").attr("r", 0.125)
     $(".tut-pin").removeClass("highlight")
 });
+
+// ============================================================================
+// ERIC WANTED A PLACE TO WRITE HIS CODE
+// ============================================================================
+
+

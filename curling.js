@@ -8,6 +8,7 @@ var CLICK_DISTANCE = 4,
 var curling = d3.select('#curling');
 var width = 4.75,
     height = width*2.4,
+    sheet_length = 40.2336
     sixfeet = width * 0.38501052631,
     rockwidth = sixfeet / 6 * 10 / 12,
     rockradius = rockwidth/2,
@@ -757,34 +758,49 @@ $(".tut-pin").on("mouseleave", function(){
 
 const rad_to_deg = d3.scaleLinear().domain([0, 2 * Math.PI]).range([0, 360])
 
-function setupRequest(async=true) {
-    const ret = new XMLHttpRequest();
-    ret.open("POST", "/", async);
-    ret.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    return ret;
-}
+var web_socket = null;
 
-function simulate(still_rocks, toss) {
-    const ret = setupRequest(false);
-    const request = new JSON_RPC.Request('run_simulation', [still_rocks, toss]);
-
-    ret.send(request.toString());
-
-    const response = new JSON_RPC.parse(ret.responseText);
-    if(response.error) {
-        alert(response.error);
+function setupWebSocket() {
+    reset = function() {
+        setTimeout(setupWebSocket, 1000);
+    };
+    web_socket = new WebSocket(`ws://${location.hostname}:5000`);
+    web_socket.onerror = reset;
+    web_socket.onclose = reset;
+    web_socket.onopen = function() {
+        console.log("Opened connection to server");
     }
-
-    return response.result;
 }
+
+setupWebSocket();
+
+function simulate(still_rocks, toss, callback) {
+    const request = new JSON_RPC.Request('run_simulation', [still_rocks, toss]);
+    
+    web_socket.onmessage = function(event) {
+        const response = new JSON_RPC.parse(event.data);
+        if(response.error) {
+            console.log(response.error);
+        } else {
+            callback(response.result);
+        }
+        
+        return true;
+    };
+    
+    web_socket.send(request.toString());
+}
+
+const waypointColor = d3.scaleOrdinal(d3.schemeCategory10)
 
 function updateTrajectories(trajects) {
     layerPi.selectAll(".trajectory")
-        .data(Object.values(trajects))
+        .data(Object.entries(trajects), d => d[0])
         .join("g")
             .attr("class", "trajectory")
+            .attr("fill", d => waypointColor(d[0]))
         .selectAll(".waypoint")
-        .data(d => d)
+        .data(d => d[1])
         .join(
             enter => enter.append("polygon")
                 .attr("points", "0,0 -1,-1 -2,-1 0,1 2,-1 1,-1")
@@ -793,8 +809,9 @@ function updateTrajectories(trajects) {
             exit => exit.remove()
         )
             .attr("transform", 
-                  d => `translate(${d.p[0]} ${d.p[1]})
-                        rotate(${rad_to_deg(d.psi)})
+                  d => `translate(${d.p[0]} ${sheet_length - d.p[1]})
+                        scale(0.1)
+                        rotate(${180-rad_to_deg(d.psi)})
                         `)
 }
 

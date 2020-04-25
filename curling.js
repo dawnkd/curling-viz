@@ -6,21 +6,21 @@ var CLICK_DISTANCE = 4,
     CLICK_DISTANCE_2 = CLICK_DISTANCE * CLICK_DISTANCE;
 
 var curling = d3.select('#curling');
-var width = 350,
+var width = 4.75,
     height = width*2.4,
     sixfeet = width * 0.38501052631,
     rockwidth = sixfeet / 6 * 10 / 12,
     rockradius = rockwidth/2,
     rockoutline = rockwidth/5,
     spacer = rockwidth/4,
-    svg_rockradius = rockradius + rockoutline/2.
-    linewidth = 2,
+    svg_rockradius = rockradius + rockoutline/2,
+    linewidth = .02,
     backline_pos = sixfeet,
     hogline_width = sixfeet/18,
     score_flag = false,
     current_end = 1,
     red_score = 0,
-    yel_score = 0
+    yel_score = 0,
     hammer = "red";
 
 var radii = {
@@ -43,11 +43,11 @@ var row = 0, col = 1;
 for (let i = 1; i <= 8; ++i) {
     col = i % 2 + 1;
     if (i%2) row++;
-    let x = rockwidth * col + spacer * (i%2) + 1
+    let x = rockwidth * col + spacer * (i%2 + 1)
     let y = rockwidth * row + spacer * (row-1)
     rocks.push({x: x, y: y, name: `red${i}`, color: "red", id: i, sitting: true, score: true})
 
-    x = width - rockwidth * col - spacer * (i%2) + 1
+    x = width - rockwidth * col - spacer * (i%2 + 1)
     y = rockwidth * row + spacer * (row-1)
     rocks.push({x: x, y: y, name: `yel${i}`, color: "yellow", id: i+8, sitting: true, score: true})
 }
@@ -65,15 +65,16 @@ var measures = []
 
 var svg = curling.append("svg")
     .attr("width", 350)
-    .attr("height", height)
+    .attr("height", 2.4*350)
+    .attr("viewBox", `0 0 ${width} ${height}`)
     .append("g")
     .attr("class", "curling")
-    .attr("viewBox", `0 0 4.75 ${4.75*2.4}`)
 
 // bottom layer
 var layer1 = svg.append('g')
 var layer2 = svg.append('g')
 var layer3 = svg.append('g')
+var layerPi = svg.append('g')
 var layer4 = svg.append('g')
 //top layer
 
@@ -181,7 +182,7 @@ layer1.append("circle")
 layer1.append("circle")
     .attr("name", "pin")
     .attr("class", "house line")
-    .attr("r", 0.125)
+    .attr("r", 0.00125)
     .attr("cx", pin.x)
     .attr("cy", pin.y)
 
@@ -742,11 +743,11 @@ highlight_arr.forEach(e => {
 
 // pin 
 $(".tut-pin").on("mouseenter", function(){
-    $("circle[name=pin]").attr("r", 2)
+    $("circle[name=pin]").attr("r", .02)
     $(".tut-pin").addClass("highlight")
 });
 $(".tut-pin").on("mouseleave", function(){
-    $("circle[name=pin]").attr("r", 0.125)
+    $("circle[name=pin]").attr("r", 0.00125)
     $(".tut-pin").removeClass("highlight")
 });
 
@@ -754,4 +755,46 @@ $(".tut-pin").on("mouseleave", function(){
 // ERIC WANTED A PLACE TO WRITE HIS CODE
 // ============================================================================
 
+const rad_to_deg = d3.scaleLinear().domain([0, 2 * Math.PI]).range([0, 360])
+
+function setupRequest(async=true) {
+    const ret = new XMLHttpRequest();
+    ret.open("POST", "/", async);
+    ret.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    return ret;
+}
+
+function simulate(still_rocks, toss) {
+    const ret = setupRequest(false);
+    const request = new JSON_RPC.Request('run_simulation', [still_rocks, toss]);
+
+    ret.send(request.toString());
+
+    const response = new JSON_RPC.parse(ret.responseText);
+    if(response.error) {
+        alert(response.error);
+    }
+
+    return response.result;
+}
+
+function updateTrajectories(trajects) {
+    layerPi.selectAll(".trajectory")
+        .data(Object.values(trajects))
+        .join("g")
+            .attr("class", "trajectory")
+        .selectAll(".waypoint")
+        .data(d => d)
+        .join(
+            enter => enter.append("polygon")
+                .attr("points", "0,0 -1,-1 -2,-1 0,1 2,-1 1,-1")
+                .attr("class", "waypoint"),
+            update => update,
+            exit => exit.remove()
+        )
+            .attr("transform", 
+                  d => `translate(${d.p[0]} ${d.p[1]})
+                        rotate(${rad_to_deg(d.psi)})
+                        `)
+}
 

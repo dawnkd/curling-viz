@@ -12,21 +12,34 @@ body {
 #curling, #controls, #club_scoreboard {padding-top: 10px;}
 
 #club_scoreboard {
-    background-clip: content-box;
+    /*background-clip: content-box;*/
     background-color: white;
+    margin-top: 10px;
+    padding-top: 0px;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    border-radius: 0.25rem;
 }
 
 #tv_scoreboard {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    background-clip: content-box;
+
     background-color: white;
+    background-color: white;
+    margin-top: 10px;
+    padding-top: 0px;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 5px;
+    border-radius: 0.25rem;
 }
 
 .instructions {
     background-color: white;
     font-style: normal;
     width: 768px;
+    margin-top: 10px;
+    border-radius: 0.25rem;
 }
 
 .help {
@@ -59,7 +72,7 @@ circle[name="pin"].highlight {
 .measure.highlight {stroke:cyan !important;}
 
 input.highlight, label.highlight {background-color: yellow; color: black;}
-input {margin-bottom: 10px !important;}
+input {margin-bottom: 10px;}
 
 ul ul { margin-top: 0px; font-size: 12px;}
 
@@ -85,7 +98,7 @@ p, ul, li, span {cursor: default;}
 from https://github.com/twbs/bootstrap/blob/master/dist/css/bootstrap.css o
 to mactch btn classes
 */
-.checkbox{
+.label{
     display: inline-block;
     font-weight: 400;
     line-height: 1.5;
@@ -103,12 +116,21 @@ to mactch btn classes
     padding: 0.375rem 0.75rem;
     font-size: 1rem;
     border-radius: 0.25rem;
+    margin-bottom: 10px;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+.slider {
+    width: 120px;
+    margin-bottom: 0px !important;
+}
+
+.btn:disabled {cursor:default;}
 
 .hide-measure {
     stroke-width: 0px !important;
 }
+
 
 
 /*#button {
@@ -148,7 +170,19 @@ to mactch btn classes
 /*===========================================================================*/
 .curling * {stroke-width: .01}
 
-.rock, .simRock {stroke: grey;}
+.rock, .simRock {stroke: grey; }
+
+.rock {
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+.rock:active,{
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
+}
 
 .rock.red, .simRock.red {fill: red;}
 
@@ -173,3 +207,5 @@ to mactch btn classes
 .measure.yellow {stroke: yellow;}
 
 .measure.no-score {stroke: grey;}
+
+#mode-label {background-color: lightgrey; cursor: default;}

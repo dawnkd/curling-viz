@@ -1,6 +1,20 @@
-
 // ============================================================================
-// CURLING SVG
+//         CCCCCCCCCCCCCUUUUUUUU     UUUUUUUURRRRRRRRRRRRRRRRR   LLLLLLLLLLL             IIIIIIIIIINNNNNNNN        NNNNNNNN        GGGGGGGGGGGGG        SSSSSSSSSSSSSSS VVVVVVVV           VVVVVVVV      GGGGGGGGGGGGG
+//      CCC::::::::::::CU::::::U     U::::::UR::::::::::::::::R  L:::::::::L             I::::::::IN:::::::N       N::::::N     GGG::::::::::::G      SS:::::::::::::::SV::::::V           V::::::V   GGG::::::::::::G
+//    CC:::::::::::::::CU::::::U     U::::::UR::::::RRRRRR:::::R L:::::::::L             I::::::::IN::::::::N      N::::::N   GG:::::::::::::::G     S:::::SSSSSS::::::SV::::::V           V::::::V GG:::::::::::::::G
+//   C:::::CCCCCCCC::::CUU:::::U     U:::::UURR:::::R     R:::::RLL:::::::LL             II::::::IIN:::::::::N     N::::::N  G:::::GGGGGGGG::::G     S:::::S     SSSSSSSV::::::V           V::::::VG:::::GGGGGGGG::::G
+//  C:::::C       CCCCCC U:::::U     U:::::U   R::::R     R:::::R  L:::::L                 I::::I  N::::::::::N    N::::::N G:::::G       GGGGGG     S:::::S             V:::::V           V:::::VG:::::G       GGGGGG
+// C:::::C               U:::::D     D:::::U   R::::R     R:::::R  L:::::L                 I::::I  N:::::::::::N   N::::::NG:::::G                   S:::::S              V:::::V         V:::::VG:::::G              
+// C:::::C               U:::::D     D:::::U   R::::RRRRRR:::::R   L:::::L                 I::::I  N:::::::N::::N  N::::::NG:::::G                    S::::SSSS            V:::::V       V:::::V G:::::G              
+// C:::::C               U:::::D     D:::::U   R:::::::::::::RR    L:::::L                 I::::I  N::::::N N::::N N::::::NG:::::G    GGGGGGGGGG       SS::::::SSSSS        V:::::V     V:::::V  G:::::G    GGGGGGGGGG
+// C:::::C               U:::::D     D:::::U   R::::RRRRRR:::::R   L:::::L                 I::::I  N::::::N  N::::N:::::::NG:::::G    G::::::::G         SSS::::::::SS       V:::::V   V:::::V   G:::::G    G::::::::G
+// C:::::C               U:::::D     D:::::U   R::::R     R:::::R  L:::::L                 I::::I  N::::::N   N:::::::::::NG:::::G    GGGGG::::G            SSSSSS::::S       V:::::V V:::::V    G:::::G    GGGGG::::G
+// C:::::C               U:::::D     D:::::U   R::::R     R:::::R  L:::::L                 I::::I  N::::::N    N::::::::::NG:::::G        G::::G                 S:::::S       V:::::V:::::V     G:::::G        G::::G
+//  C:::::C       CCCCCC U::::::U   U::::::U   R::::R     R:::::R  L:::::L         LLLLLL  I::::I  N::::::N     N:::::::::N G:::::G       G::::G                 S:::::S        V:::::::::V       G:::::G       G::::G
+//   C:::::CCCCCCCC::::C U:::::::UUU:::::::U RR:::::R     R:::::RLL:::::::LLLLLLLLL:::::LII::::::IIN::::::N      N::::::::N  G:::::GGGGGGGG::::G     SSSSSSS     S:::::S         V:::::::V         G:::::GGGGGGGG::::G
+//    CC:::::::::::::::C  UU:::::::::::::UU  R::::::R     R:::::RL::::::::::::::::::::::LI::::::::IN::::::N       N:::::::N   GG:::::::::::::::G     S::::::SSSSSS:::::S          V:::::V           GG:::::::::::::::G
+//      CCC::::::::::::C    UU:::::::::UU    R::::::R     R:::::RL::::::::::::::::::::::LI::::::::IN::::::N        N::::::N     GGG::::::GGG:::G     S:::::::::::::::SS            V:::V              GGG::::::GGG:::G
+//         CCCCCCCCCCCCC      UUUUUUUUU      RRRRRRRR     RRRRRRRLLLLLLLLLLLLLLLLLLLLLLLLIIIIIIIIIINNNNNNNN         NNNNNNN        GGGGGG   GGGG      SSSSSSSSSSSSSSS               VVV                  GGGGGG   GGGG
 // ============================================================================
 var CLICK_DISTANCE = 4,
     CLICK_DISTANCE_2 = CLICK_DISTANCE * CLICK_DISTANCE;
@@ -55,14 +69,6 @@ var reset = _.cloneDeep(rocks)
 
 var measures = []
 
-// var house = []
-// cx = width/2
-// cy = radii.twelve + backline_pos
-// for (r in radii) {
-//     house.push({r: r, cx: cx, cy: cy, })
-// }
- 
-
 var svg = curling.append("svg")
     .attr("width", 350)
     .attr("height", 2.4*350)
@@ -85,6 +91,24 @@ layer1.append("rect")
     .attr("height", height)
     .attr("x", 0)
     .attr("y", 0)
+
+layer3.append("text")
+    .attr("id", "mode-label")
+    .attr("class", "noh")
+    .attr("x", pin.x)
+    .attr("y", rockwidth)
+    .attr("text-anchor", "middle")
+    .attr("font-size", `${rockwidth}px`)
+    .text("Tutorial Mode")
+
+var bbox = $("#mode-label")[0].getBBox()
+layer2.append("rect")
+    .attr("id", "mode-background")
+    .attr("x", pin.x - bbox.width*1.1 / 2)
+    .attr("y", 0+bbox.height*0.1)
+    .attr("width", bbox.width*1.1)
+    .attr("height", bbox.height)
+    .attr("fill", "lightgrey")
 
 // backline
 layer1.append("line")
@@ -190,7 +214,13 @@ layer1.append("circle")
 updateRocks(rocks)
 
 // ----------------------------------------------------------------------------
-// UPDATE FUNCTIONS
+// ##     ## ########  ########     ###    ######## ########    ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######  
+// ##     ## ##     ## ##     ##   ## ##      ##    ##          ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ## 
+// ##     ## ##     ## ##     ##  ##   ##     ##    ##          ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##       
+// ##     ## ########  ##     ## ##     ##    ##    ######      ######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ##  ######  
+// ##     ## ##        ##     ## #########    ##    ##          ##       ##     ## ##  #### ##          ##     ##  ##     ## ##  ####       ## 
+// ##     ## ##        ##     ## ##     ##    ##    ##          ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ## 
+//  #######  ##        ########  ##     ##    ##    ########    ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######  
 // ----------------------------------------------------------------------------
 
 function updateRocks(rocks) {
@@ -224,12 +254,14 @@ function updateRocks(rocks) {
                     .attr("class", d => `rock ${d.color}${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
                 )
             },
-            exit => exit.remove()
+            exit => {
+                exit.remove()
                 // .call(exit => exit
                 //     .transition(t)
                 //     .attr("cx", d => d.color == "red" ? rockwidth*-2 : width + rockwidth*2)
                 //     .remove()
                 // )
+            }
         )   
 }
 
@@ -288,7 +320,13 @@ function updateMeasures(measures) {
 }
 
 // ----------------------------------------------------------------------------
-// CALLBACKS
+//  ######     ###    ##       ##       ########     ###     ######  ##    ##  ######  
+// ##    ##   ## ##   ##       ##       ##     ##   ## ##   ##    ## ##   ##  ##    ## 
+// ##        ##   ##  ##       ##       ##     ##  ##   ##  ##       ##  ##   ##       
+// ##       ##     ## ##       ##       ########  ##     ## ##       #####     ######  
+// ##       ######### ##       ##       ##     ## ######### ##       ##  ##         ## 
+// ##    ## ##     ## ##       ##       ##     ## ##     ## ##    ## ##   ##  ##    ## 
+//  ######  ##     ## ######## ######## ########  ##     ##  ######  ##    ##  ###### 
 // ----------------------------------------------------------------------------
 
 function clicked(d, i) {
@@ -321,20 +359,7 @@ function dragged(d) {
     }
     e.attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
 
-    if (rockInHouse(d)) {
-        r = rockDist(d) - svg_rockradius
-        // update radius or add measure circle around rock 
-        if (measures.some(m => m.id == d.id)){
-            measure = measures.find(m => m.id == d.id)
-            measure.r = r
-        } else {
-            // add measure circles to data array
-            measures.push({id: d.id, r: r, color: d.color, sitting:true, score: true})
-        }
-    } else {
-        // remove measure circle
-        measures = measures.filter(m => m.id != d.id)
-    }
+    manageMeasures(d)
 
     // determine which rocks are sitting
     let order = rocks.sort(scoreSort)
@@ -378,9 +403,24 @@ function dragended(d) {
     d3.select(this).classed("active", false);
 }
 
-// ----------------------------------------------------------------------------
-// HELPERS
-// ----------------------------------------------------------------------------
+// ============================================================================
+// HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLL             PPPPPPPPPPPPPPPPP   EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR      SSSSSSSSSSSSSSS 
+// H:::::::H     H:::::::HE::::::::::::::::::::EL:::::::::L             P::::::::::::::::P  E::::::::::::::::::::ER::::::::::::::::R   SS:::::::::::::::S
+// H:::::::H     H:::::::HE::::::::::::::::::::EL:::::::::L             P::::::PPPPPP:::::P E::::::::::::::::::::ER::::::RRRRRR:::::R S:::::SSSSSS::::::S
+// HH::::::H     H::::::HHEE::::::EEEEEEEEE::::ELL:::::::LL             PP:::::P     P:::::PEE::::::EEEEEEEEE::::ERR:::::R     R:::::RS:::::S     SSSSSSS
+//   H:::::H     H:::::H    E:::::E       EEEEEE  L:::::L                 P::::P     P:::::P  E:::::E       EEEEEE  R::::R     R:::::RS:::::S            
+//   H:::::H     H:::::H    E:::::E               L:::::L                 P::::P     P:::::P  E:::::E               R::::R     R:::::RS:::::S            
+//   H::::::HHHHH::::::H    E::::::EEEEEEEEEE     L:::::L                 P::::PPPPPP:::::P   E::::::EEEEEEEEEE     R::::RRRRRR:::::R  S::::SSSS         
+//   H:::::::::::::::::H    E:::::::::::::::E     L:::::L                 P:::::::::::::PP    E:::::::::::::::E     R:::::::::::::RR    SS::::::SSSSS    
+//   H:::::::::::::::::H    E:::::::::::::::E     L:::::L                 P::::PPPPPPPPP      E:::::::::::::::E     R::::RRRRRR:::::R     SSS::::::::SS  
+//   H::::::HHHHH::::::H    E::::::EEEEEEEEEE     L:::::L                 P::::P              E::::::EEEEEEEEEE     R::::R     R:::::R       SSSSSS::::S 
+//   H:::::H     H:::::H    E:::::E               L:::::L                 P::::P              E:::::E               R::::R     R:::::R            S:::::S
+//   H:::::H     H:::::H    E:::::E       EEEEEE  L:::::L         LLLLLL  P::::P              E:::::E       EEEEEE  R::::R     R:::::R            S:::::S
+// HH::::::H     H::::::HHEE::::::EEEEEEEE:::::ELL:::::::LLLLLLLLL:::::LPP::::::PP          EE::::::EEEEEEEE:::::ERR:::::R     R:::::RSSSSSSS     S:::::S
+// H:::::::H     H:::::::HE::::::::::::::::::::EL::::::::::::::::::::::LP::::::::P          E::::::::::::::::::::ER::::::R     R:::::RS::::::SSSSSS:::::S
+// H:::::::H     H:::::::HE::::::::::::::::::::EL::::::::::::::::::::::LP::::::::P          E::::::::::::::::::::ER::::::R     R:::::RS:::::::::::::::SS 
+// HHHHHHHHH     HHHHHHHHHEEEEEEEEEEEEEEEEEEEEEELLLLLLLLLLLLLLLLLLLLLLLLPPPPPPPPPP          EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRR SSSSSSSSSSSSSSS  
+// ============================================================================
 
 var rockDist = (rock) => Math.sqrt((pin.x - rock.x)**2 + (pin.y - rock.y)**2)
 
@@ -423,57 +463,116 @@ function find(arr, test, ctx) {
 }
 
 function check_showCircles() {
-    let test = $("#showMeasures")[0].checked
-    if (test) {
-        $(".measure").removeClass("hide-measure")
-    } else {
-        $(".measure").addClass("hide-measure")
-    }
+    $(".measure").each(function() {
+        let test = $("#showMeasures")[0].checked && ((mode && $(this)[0].id < 0) || (!mode && !($(this)[0].id < 0)))
+        console.log($(this)[0].id, test)
+        if (test) {
+            $(this).removeClass("hide-measure")
+        } else {
+            $(this).addClass("hide-measure")
+        }
+    })
+}
+
+function get_leftHanded() {
+    return $("#leftHanded")[0].checked
 }
 
 function switchTeams(team) {
     return team == "red" ? "yellow" : "red"
 }
 
-// ============================================================================
-// SIMULATION
-// ============================================================================
+function manageMeasures(rock) {
+    if (rockInHouse(rock)) {
+        r = rockDist(rock) - svg_rockradius
+        // update radius or add measure circle around rock 
+        if (measures.some(m => m.id == rock.id)){
+            measure = measures.find(m => m.id == rock.id)
+            measure.r = r
+        } else {
+            // add measure circles to data array
+            measures.push({id: rock.id, r: r, color: rock.color, sitting:true, score: true})
+        }
+    } else {
+        // remove measure circle
+        measures = measures.filter(m => m.id != rock.id)
+    }
+}
 
-var teams = {"red":"red", "yel":"yellow"};
-var sim_rocks = [];
-var next_color = teams[hammer]
-var simRock_id = 100
+function newSimRock(color) {
+    let x = width/2 + (get_leftHanded() ? rockradius : -rockradius)
+    let y = height - 2*svg_rockradius
+    simRocks.push({x: x, y: y, color: color, id: simId_gen.next().value, sitting: true, score: true, new: true})
 
-function newSimRock() {
-    let x = width/2
-    let y = hogline_pos - hogline_width/2 + svg_rockradius
-    sim_rocks.push({x: x, y: y, color: next_color, id: simRock_id, sitting: true, score: true})
-    simRock_id++;
     next_color = switchTeams(next_color)
 }
 
-function updateSimRocks(sim_rocks) {
+function* simId_generator() {
+    id = -1
+    while (true) {
+        ids = simRocks.map(sr => sr.id)
+        yield ids ? Math.min(... ids) - 1 : id
+    }
+}
+
+function get_curl() {
+    return $("#curl").val() == 0 ? -1 : 1;
+}
+
+function get_weight() {
+    return (5 / 1000000) * $("#weight").val()
+}
+
+function get_angle() {
+    return -0.1 + (0.2 / 1000000) * $("#angle").val()
+}
+
+
+// ============================================================================
+
+//    SSSSSSSSSSSSSSS   iiii                                            lllllll                           tttt            iiii                                     
+//  SS:::::::::::::::S i::::i                                           l:::::l                        ttt:::t           i::::i                                    
+// S:::::SSSSSS::::::S  iiii                                            l:::::l                        t:::::t            iiii                                     
+// S:::::S     SSSSSSS                                                  l:::::l                        t:::::t                                                     
+// S:::::S            iiiiiii    mmmmmmm    mmmmmmm   uuuuuu    uuuuuu   l::::l   aaaaaaaaaaaaa  ttttttt:::::ttttttt    iiiiiii    ooooooooooo   nnnn  nnnnnnnn    
+// S:::::S            i:::::i  mm:::::::m  m:::::::mm u::::u    u::::u   l::::l   a::::::::::::a t:::::::::::::::::t    i:::::i  oo:::::::::::oo n:::nn::::::::nn  
+//  S::::SSSS          i::::i m::::::::::mm::::::::::mu::::u    u::::u   l::::l   aaaaaaaaa:::::at:::::::::::::::::t     i::::i o:::::::::::::::on::::::::::::::nn 
+//   SS::::::SSSSS     i::::i m::::::::::::::::::::::mu::::u    u::::u   l::::l            a::::atttttt:::::::tttttt     i::::i o:::::ooooo:::::onn:::::::::::::::n
+//     SSS::::::::SS   i::::i m:::::mmm::::::mmm:::::mu::::u    u::::u   l::::l     aaaaaaa:::::a      t:::::t           i::::i o::::o     o::::o  n:::::nnnn:::::n
+//        SSSSSS::::S  i::::i m::::m   m::::m   m::::mu::::u    u::::u   l::::l   aa::::::::::::a      t:::::t           i::::i o::::o     o::::o  n::::n    n::::n
+//             S:::::S i::::i m::::m   m::::m   m::::mu::::u    u::::u   l::::l  a::::aaaa::::::a      t:::::t           i::::i o::::o     o::::o  n::::n    n::::n
+//             S:::::S i::::i m::::m   m::::m   m::::mu:::::uuuu:::::u   l::::l a::::a    a:::::a      t:::::t    tttttt i::::i o::::o     o::::o  n::::n    n::::n
+// SSSSSSS     S:::::Si::::::im::::m   m::::m   m::::mu:::::::::::::::uul::::::la::::a    a:::::a      t::::::tttt:::::ti::::::io:::::ooooo:::::o  n::::n    n::::n
+// S::::::SSSSSS:::::Si::::::im::::m   m::::m   m::::m u:::::::::::::::ul::::::la:::::aaaa::::::a      tt::::::::::::::ti::::::io:::::::::::::::o  n::::n    n::::n
+// S:::::::::::::::SS i::::::im::::m   m::::m   m::::m  uu::::::::uu:::ul::::::l a::::::::::aa:::a       tt:::::::::::tti::::::i oo:::::::::::oo   n::::n    n::::n
+//  SSSSSSSSSSSSSSS   iiiiiiiimmmmmm   mmmmmm   mmmmmm    uuuuuuuu  uuuullllllll  aaaaaaaaaa  aaaa         ttttttttttt  iiiiiiii   ooooooooooo     nnnnnn    nnnnnn
+
+// ============================================================================
+
+
+
+var teams = {"red":"red", "yel":"yellow"};
+var simRocks = [];
+var simId_gen = simId_generator()
+
+var simArrow = [];
+
+function updateSimRocks(simRocks) {
     const t = d3.transition()
-        .duration(1000);
+        .duration(100);
 
     layer4.selectAll(".simRock")
-        .data(sim_rocks, d => d.id)
+        .data(simRocks, d => d.id)
         .join(
             enter => {
                 enter.append("circle")
-                    .attr("class", d => `simRock ${d.color}`)
+                    .attr("class", d => `simRock ${d.color}${d.new ? "" : " new"}`)
                     .attr("name", d => d.name)
                     .attr("id", d => d.id)
                     .attr("r", rockradius)
                     .attr("cx", d => d.x)
                     .attr("cy", d => d.y)
                     .style("stroke-width", rockoutline)
-                    .call(d3.drag()
-                        .clickDistance(CLICK_DISTANCE)
-                        .on("start", sim_dragstarted)
-                        .on("drag", sim_dragged)
-                        .on("end", sim_dragended)
-                    );
             },
             update => {
                 update.call(update => update.transition(t)
@@ -483,108 +582,36 @@ function updateSimRocks(sim_rocks) {
                     .attr("class", d => `simRock ${d.color}${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
                 )
             },
-            exit => exit.remove()
+            exit => {
+                exit.remove()
                 // .call(exit => exit
                 //     .transition(t)
                 //     .attr("cx", d => d.color == "red" ? rockwidth*-2 : width + rockwidth*2)
                 //     .remove()
                 // )
+            }
         )
 }
 
-// ----------------------------------------------------------------------------
-// sim callbacks
-// ----------------------------------------------------------------------------
-
-function sim_clicked(d, i) {
-    if (d3.event.defaultPrevented) return; // dragged
-}
-
-function sim_dragstarted(d) {
-    d.startX = d3.event.sourceEvent.clientX;
-    d.startY = d3.event.sourceEvent.clientY;
-
-    // if rocks are greyed out from scoring, remove the no-score classes
-    if (score_flag) {
-        sim_rocks.forEach((e) => e.score = true)
-        measures.forEach((e) => e.score = true)
-        updateSimRocks(sim_rocks)
-        updateMeasures(measures)
-        score_flag = false;
-    }
-}
-
-function sim_dragged(d) {
-    var e = d3.select(this),
-        dStartX = d.startX - d3.event.sourceEvent.clientX,
-        dStartY = d.startY - d3.event.sourceEvent.clientY;
-
-    if (dStartX * dStartX + dStartY * dStartY > CLICK_DISTANCE_2 &&
-        !e.classed("active")) {
-
-        e.raise().classed("active", true);
-    }
-    e.attr("cx", d.x = d3.event.x).attr("cy", d.y = d3.event.y);
-
-    if (rockInHouse(d)) {
-        r = rockDist(d) - svg_rockradius
-        // update radius or add measure circle around rock 
-        if (measures.some(m => m.id == d.id)){
-            measure = measures.find(m => m.id == d.id)
-            measure.r = r
-        } else {
-            // add measure circles to data array
-            measures.push({id: d.id, r: r, color: d.color, sitting:true, score: true})
-        }
-    } else {
-        // remove measure circle
-        measures = measures.filter(m => m.id != d.id)
-    }
-
-    // determine which rocks are sitting
-    let order = sim_rocks.sort(scoreSort)
-    let first = order[0]
-    let first_nonscoring = find(order, r => r.color != first.color)
-    order.forEach((e,i) => {
-        if (rockInPlay(e)) {
-            // darken rocks and measures that aren't sitting
-            if (i >= first_nonscoring) {
-                e.sitting = false
-                if (rockInHouse(e)) {
-                    m = find(measures, m => m.id == e.id)
-                    measures[m].sitting = false
-                }
-            }
-            else {
-                // don't darken rocks and measures that are sitting
-                e.sitting = rockInHouse(e)
-                
-                if (rockInHouse(e)) {
-                    m = find(measures, m => m.id == e.id)
-                    measures[m].sitting = true
-                }
-            }
-        } else { // don't darken rocks that aren't in play
-            e.sitting = true;
-        }
-    })
-
-    
-    updateSimRocks(order)
-    updateMeasures(measures)
-}
-
-function sim_dragended(d) {
-    const filter = (e) => e.id == d.id
-    let i = sim_rocks.findIndex(filter)
-    sim_rocks[i].x = d.x
-    sim_rocks[i].y = d.y
-    updateSimRocks(sim_rocks)
-    d3.select(this).classed("active", false);
-}
-
 // ============================================================================
-// CONTROLS
+
+//         CCCCCCCCCCCCC     OOOOOOOOO     NNNNNNNN        NNNNNNNNTTTTTTTTTTTTTTTTTTTTTTTRRRRRRRRRRRRRRRRR        OOOOOOOOO     LLLLLLLLLLL                SSSSSSSSSSSSSSS 
+//      CCC::::::::::::C   OO:::::::::OO   N:::::::N       N::::::NT:::::::::::::::::::::TR::::::::::::::::R     OO:::::::::OO   L:::::::::L              SS:::::::::::::::S
+//    CC:::::::::::::::C OO:::::::::::::OO N::::::::N      N::::::NT:::::::::::::::::::::TR::::::RRRRRR:::::R  OO:::::::::::::OO L:::::::::L             S:::::SSSSSS::::::S
+//   C:::::CCCCCCCC::::CO:::::::OOO:::::::ON:::::::::N     N::::::NT:::::TT:::::::TT:::::TRR:::::R     R:::::RO:::::::OOO:::::::OLL:::::::LL             S:::::S     SSSSSSS
+//  C:::::C       CCCCCCO::::::O   O::::::ON::::::::::N    N::::::NTTTTTT  T:::::T  TTTTTT  R::::R     R:::::RO::::::O   O::::::O  L:::::L               S:::::S            
+// C:::::C              O:::::O     O:::::ON:::::::::::N   N::::::N        T:::::T          R::::R     R:::::RO:::::O     O:::::O  L:::::L               S:::::S            
+// C:::::C              O:::::O     O:::::ON:::::::N::::N  N::::::N        T:::::T          R::::RRRRRR:::::R O:::::O     O:::::O  L:::::L                S::::SSSS         
+// C:::::C              O:::::O     O:::::ON::::::N N::::N N::::::N        T:::::T          R:::::::::::::RR  O:::::O     O:::::O  L:::::L                 SS::::::SSSSS    
+// C:::::C              O:::::O     O:::::ON::::::N  N::::N:::::::N        T:::::T          R::::RRRRRR:::::R O:::::O     O:::::O  L:::::L                   SSS::::::::SS  
+// C:::::C              O:::::O     O:::::ON::::::N   N:::::::::::N        T:::::T          R::::R     R:::::RO:::::O     O:::::O  L:::::L                      SSSSSS::::S 
+// C:::::C              O:::::O     O:::::ON::::::N    N::::::::::N        T:::::T          R::::R     R:::::RO:::::O     O:::::O  L:::::L                           S:::::S
+//  C:::::C       CCCCCCO::::::O   O::::::ON::::::N     N:::::::::N        T:::::T          R::::R     R:::::RO::::::O   O::::::O  L:::::L         LLLLLL            S:::::S
+//   C:::::CCCCCCCC::::CO:::::::OOO:::::::ON::::::N      N::::::::N      TT:::::::TT      RR:::::R     R:::::RO:::::::OOO:::::::OLL:::::::LLLLLLLLL:::::LSSSSSSS     S:::::S
+//    CC:::::::::::::::C OO:::::::::::::OO N::::::N       N:::::::N      T:::::::::T      R::::::R     R:::::R OO:::::::::::::OO L::::::::::::::::::::::LS::::::SSSSSS:::::S
+//      CCC::::::::::::C   OO:::::::::OO   N::::::N        N::::::N      T:::::::::T      R::::::R     R:::::R   OO:::::::::OO   L::::::::::::::::::::::LS:::::::::::::::SS 
+//         CCCCCCCCCCCCC     OOOOOOOOO     NNNNNNNN         NNNNNNN      TTTTTTTTTTT      RRRRRRRR     RRRRRRR     OOOOOOOOO     LLLLLLLLLLLLLLLLLLLLLLLL SSSSSSSSSSSSSSS   
+
 // ============================================================================
 
 function resetRocks_click() {
@@ -679,36 +706,109 @@ function showMeasures_change() {
 
 var mode = 0
 function switchModes_click() {
-    // enter simulation mode
+    //enter simulation mode
     if (mode == 0) {
-        $("#newRock-div").show()
+        $("#simControl-div").show()
+        $("#resetButton").prop("disabled", true)
+        // update mode text
+        $("#mode-label").text("Simulation Mode")
+        let bbox = $("#mode-label")[0].getBBox()
+        $("#mode-background")
+            .attr("x", pin.x - bbox.width*1.1 / 2)
+            .attr("y", 0+bbox.height*0.1)
+            .attr("width", bbox.width*1.1)
+            .attr("height", bbox.height)
         // clear tutorial rocks
         updateRocks([])
-        // add simulation rocks
-        updateSimRocks(sim_rocks)
-        updateMeasures()
+        // copy or update rocks to simRocks
+        let rocks_copy = _.cloneDeep(rocks)
+        rocks_copy.forEach(r => {
+            r.id = -r.id
+            i = simRocks.findIndex(sr => sr.id == r.id)
+            if (i >= 0) {
+                simRocks[i] = r
+            } else {
+                simRocks.push(r)
+            }
+        })
+        
+        updateSimRocks(simRocks)
+        simRocks.forEach(sr => manageMeasures(sr))
+        // updateMeasures()
         next_color = teams[hammer]
         mode = 1
     }
     // enter tutorial mode
     else {
-        $("#newRock-div").hide()
-        updateRocks(rocks)
+        $("#simControl-div").hide()
+        $("#resetButton").prop("disabled", false)
+        // update mode text
+        $("#mode-label").text("Tutorial Mode")
+        let bbox = $("#mode-label")[0].getBBox()
+        $("#mode-background")
+            .attr("x", pin.x - bbox.width*1.1 / 2)
+            .attr("y", 0+bbox.height*0.1)
+            .attr("width", bbox.width*1.1)
+            .attr("height", bbox.height)
+        //clear simulation rocks
         updateSimRocks([])
-        // sim_rocks = []
-        // simRock_id = 100
+        // copy or update simRocks to rocks
+        let simRocks_copy = _.cloneDeep(simRocks)
+        simRocks_copy.forEach(r => {
+            r.id = -r.id
+            i = rocks.findIndex(sr => sr.id == r.id)
+            if (i >= 0) {
+                rocks[i] = r
+            } else {
+                rocks.push(r)
+            }
+        })
+
+        updateRocks(rocks)
+        rocks.forEach(r => manageMeasures(r))
+
         mode = 0
     }
     updateMeasures(measures)
 }
 
-function newRock_click() {
-    newSimRock()
-    updateSimRocks(sim_rocks)
+function newRock_click(color) {
+    $("#newRed").prop("disabled", true)
+    $("#newYel").prop("disabled", true)
+    newSimRock(color)
+    updateSimRocks(simRocks)
+}
+
+function throwRock_click() {
+    $("#newRed").prop("disabled", false)
+    $("#newYel").prop("disabled", false)
+    $(".new").removeClass("new")
+}
+
+function leftHanded_change() {
+    let i = simRocks.findIndex(sr => sr.new)
+    simRocks[i].x = width/2 + (get_leftHanded() ? rockradius : -rockradius)
+    updateSimRocks(simRocks)
+
 }
 
 // ============================================================================
-// TUTORIAL
+// TTTTTTTTTTTTTTTTTTTTTTTUUUUUUUU     UUUUUUUUTTTTTTTTTTTTTTTTTTTTTTT     OOOOOOOOO     RRRRRRRRRRRRRRRRR   IIIIIIIIII               AAA               LLLLLLLLLLL             
+// T:::::::::::::::::::::TU::::::U     U::::::UT:::::::::::::::::::::T   OO:::::::::OO   R::::::::::::::::R  I::::::::I              A:::A              L:::::::::L             
+// T:::::::::::::::::::::TU::::::U     U::::::UT:::::::::::::::::::::T OO:::::::::::::OO R::::::RRRRRR:::::R I::::::::I             A:::::A             L:::::::::L             
+// T:::::TT:::::::TT:::::TUU:::::U     U:::::UUT:::::TT:::::::TT:::::TO:::::::OOO:::::::ORR:::::R     R:::::RII::::::II            A:::::::A            LL:::::::LL             
+// TTTTTT  T:::::T  TTTTTT U:::::U     U:::::U TTTTTT  T:::::T  TTTTTTO::::::O   O::::::O  R::::R     R:::::R  I::::I             A:::::::::A             L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R::::R     R:::::R  I::::I            A:::::A:::::A            L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R   I::::I           A:::::A A:::::A           L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R:::::::::::::RR    I::::I          A:::::A   A:::::A          L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R   I::::I         A:::::A     A:::::A         L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R::::R     R:::::R  I::::I        A:::::AAAAAAAAA:::::A        L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R::::R     R:::::R  I::::I       A:::::::::::::::::::::A       L:::::L               
+//         T:::::T         U::::::U   U::::::U         T:::::T        O::::::O   O::::::O  R::::R     R:::::R  I::::I      A:::::AAAAAAAAAAAAA:::::A      L:::::L         LLLLLL
+//       TT:::::::TT       U:::::::UUU:::::::U       TT:::::::TT      O:::::::OOO:::::::ORR:::::R     R:::::RII::::::II   A:::::A             A:::::A   LL:::::::LLLLLLLLL:::::L
+//       T:::::::::T        UU:::::::::::::UU        T:::::::::T       OO:::::::::::::OO R::::::R     R:::::RI::::::::I  A:::::A               A:::::A  L::::::::::::::::::::::L
+//       T:::::::::T          UU:::::::::UU          T:::::::::T         OO:::::::::OO   R::::::R     R:::::RI::::::::I A:::::A                 A:::::A L::::::::::::::::::::::L
+//       TTTTTTTTTTT            UUUUUUUUU            TTTTTTTTTTT           OOOOOOOOO     RRRRRRRR     RRRRRRRIIIIIIIIIIAAAAAAA                   AAAAAAALLLLLLLLLLLLLLLLLLLLLLLL
 // ============================================================================
 var highlight_arr = [
     {class:".tut-help", selector:".help"},
@@ -750,6 +850,23 @@ $(".tut-pin").on("mouseleave", function(){
     $("circle[name=pin]").attr("r", 0.00125)
     $(".tut-pin").removeClass("highlight")
 });
+
+// EEEEEEEEEEEEEEEEEEEEEERRRRRRRRRRRRRRRRR   IIIIIIIIII      CCCCCCCCCCCCC     WWWWWWWW                           WWWWWWWW   AAA               NNNNNNNN        NNNNNNNNTTTTTTTTTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD                            AAA                    PPPPPPPPPPPPPPPPP   LLLLLLLLLLL                            AAA                  CCCCCCCCCCCCCEEEEEEEEEEEEEEEEEEEEEE     TTTTTTTTTTTTTTTTTTTTTTT     OOOOOOOOO          WWWWWWWW                           WWWWWWWWRRRRRRRRRRRRRRRRR   IIIIIIIIIITTTTTTTTTTTTTTTTTTTTTTTEEEEEEEEEEEEEEEEEEEEEE     HHHHHHHHH     HHHHHHHHHIIIIIIIIII   SSSSSSSSSSSSSSS              CCCCCCCCCCCCC     OOOOOOOOO     DDDDDDDDDDDDD      EEEEEEEEEEEEEEEEEEEEEE
+// E::::::::::::::::::::ER::::::::::::::::R  I::::::::I   CCC::::::::::::C     W::::::W                           W::::::W  A:::A              N:::::::N       N::::::NT:::::::::::::::::::::TE::::::::::::::::::::ED::::::::::::DDD                        A:::A                   P::::::::::::::::P  L:::::::::L                           A:::A              CCC::::::::::::CE::::::::::::::::::::E     T:::::::::::::::::::::T   OO:::::::::OO        W::::::W                           W::::::WR::::::::::::::::R  I::::::::IT:::::::::::::::::::::TE::::::::::::::::::::E     H:::::::H     H:::::::HI::::::::I SS:::::::::::::::S          CCC::::::::::::C   OO:::::::::OO   D::::::::::::DDD   E::::::::::::::::::::E
+// E::::::::::::::::::::ER::::::RRRRRR:::::R I::::::::I CC:::::::::::::::C     W::::::W                           W::::::W A:::::A             N::::::::N      N::::::NT:::::::::::::::::::::TE::::::::::::::::::::ED:::::::::::::::DD                     A:::::A                  P::::::PPPPPP:::::P L:::::::::L                          A:::::A           CC:::::::::::::::CE::::::::::::::::::::E     T:::::::::::::::::::::T OO:::::::::::::OO      W::::::W                           W::::::WR::::::RRRRRR:::::R I::::::::IT:::::::::::::::::::::TE::::::::::::::::::::E     H:::::::H     H:::::::HI::::::::IS:::::SSSSSS::::::S        CC:::::::::::::::C OO:::::::::::::OO D:::::::::::::::DD E::::::::::::::::::::E
+// EE::::::EEEEEEEEE::::ERR:::::R     R:::::RII::::::IIC:::::CCCCCCCC::::C     W::::::W                           W::::::WA:::::::A            N:::::::::N     N::::::NT:::::TT:::::::TT:::::TEE::::::EEEEEEEEE::::EDDD:::::DDDDD:::::D                   A:::::::A                 PP:::::P     P:::::PLL:::::::LL                         A:::::::A         C:::::CCCCCCCC::::CEE::::::EEEEEEEEE::::E     T:::::TT:::::::TT:::::TO:::::::OOO:::::::O     W::::::W                           W::::::WRR:::::R     R:::::RII::::::IIT:::::TT:::::::TT:::::TEE::::::EEEEEEEEE::::E     HH::::::H     H::::::HHII::::::IIS:::::S     SSSSSSS       C:::::CCCCCCCC::::CO:::::::OOO:::::::ODDD:::::DDDDD:::::DEE::::::EEEEEEEEE::::E
+//   E:::::E       EEEEEE  R::::R     R:::::R  I::::I C:::::C       CCCCCC      W:::::W           WWWWW           W:::::WA:::::::::A           N::::::::::N    N::::::NTTTTTT  T:::::T  TTTTTT  E:::::E       EEEEEE  D:::::D    D:::::D                 A:::::::::A                  P::::P     P:::::P  L:::::L                          A:::::::::A       C:::::C       CCCCCC  E:::::E       EEEEEE     TTTTTT  T:::::T  TTTTTTO::::::O   O::::::O      W:::::W           WWWWW           W:::::W   R::::R     R:::::R  I::::I  TTTTTT  T:::::T  TTTTTT  E:::::E       EEEEEE       H:::::H     H:::::H    I::::I  S:::::S                  C:::::C       CCCCCCO::::::O   O::::::O  D:::::D    D:::::D E:::::E       EEEEEE
+//   E:::::E               R::::R     R:::::R  I::::IC:::::C                     W:::::W         W:::::W         W:::::WA:::::A:::::A          N:::::::::::N   N::::::N        T:::::T          E:::::E               D:::::D     D:::::D               A:::::A:::::A                 P::::P     P:::::P  L:::::L                         A:::::A:::::A     C:::::C                E:::::E                          T:::::T        O:::::O     O:::::O       W:::::W         W:::::W         W:::::W    R::::R     R:::::R  I::::I          T:::::T          E:::::E                    H:::::H     H:::::H    I::::I  S:::::S                 C:::::C              O:::::O     O:::::O  D:::::D     D:::::DE:::::E             
+//   E::::::EEEEEEEEEE     R::::RRRRRR:::::R   I::::IC:::::C                      W:::::W       W:::::::W       W:::::WA:::::A A:::::A         N:::::::N::::N  N::::::N        T:::::T          E::::::EEEEEEEEEE     D:::::D     D:::::D              A:::::A A:::::A                P::::PPPPPP:::::P   L:::::L                        A:::::A A:::::A    C:::::C                E::::::EEEEEEEEEE                T:::::T        O:::::O     O:::::O        W:::::W       W:::::::W       W:::::W     R::::RRRRRR:::::R   I::::I          T:::::T          E::::::EEEEEEEEEE          H::::::HHHHH::::::H    I::::I   S::::SSSS              C:::::C              O:::::O     O:::::O  D:::::D     D:::::DE::::::EEEEEEEEEE   
+//   E:::::::::::::::E     R:::::::::::::RR    I::::IC:::::C                       W:::::W     W:::::::::W     W:::::WA:::::A   A:::::A        N::::::N N::::N N::::::N        T:::::T          E:::::::::::::::E     D:::::D     D:::::D             A:::::A   A:::::A               P:::::::::::::PP    L:::::L                       A:::::A   A:::::A   C:::::C                E:::::::::::::::E                T:::::T        O:::::O     O:::::O         W:::::W     W:::::::::W     W:::::W      R:::::::::::::RR    I::::I          T:::::T          E:::::::::::::::E          H:::::::::::::::::H    I::::I    SS::::::SSSSS         C:::::C              O:::::O     O:::::O  D:::::D     D:::::DE:::::::::::::::E   
+//   E:::::::::::::::E     R::::RRRRRR:::::R   I::::IC:::::C                        W:::::W   W:::::W:::::W   W:::::WA:::::A     A:::::A       N::::::N  N::::N:::::::N        T:::::T          E:::::::::::::::E     D:::::D     D:::::D            A:::::A     A:::::A              P::::PPPPPPPPP      L:::::L                      A:::::A     A:::::A  C:::::C                E:::::::::::::::E                T:::::T        O:::::O     O:::::O          W:::::W   W:::::W:::::W   W:::::W       R::::RRRRRR:::::R   I::::I          T:::::T          E:::::::::::::::E          H:::::::::::::::::H    I::::I      SSS::::::::SS       C:::::C              O:::::O     O:::::O  D:::::D     D:::::DE:::::::::::::::E   
+//   E::::::EEEEEEEEEE     R::::R     R:::::R  I::::IC:::::C                         W:::::W W:::::W W:::::W W:::::WA:::::AAAAAAAAA:::::A      N::::::N   N:::::::::::N        T:::::T          E::::::EEEEEEEEEE     D:::::D     D:::::D           A:::::AAAAAAAAA:::::A             P::::P              L:::::L                     A:::::AAAAAAAAA:::::A C:::::C                E::::::EEEEEEEEEE                T:::::T        O:::::O     O:::::O           W:::::W W:::::W W:::::W W:::::W        R::::R     R:::::R  I::::I          T:::::T          E::::::EEEEEEEEEE          H::::::HHHHH::::::H    I::::I         SSSSSS::::S      C:::::C              O:::::O     O:::::O  D:::::D     D:::::DE::::::EEEEEEEEEE   
+//   E:::::E               R::::R     R:::::R  I::::IC:::::C                          W:::::W:::::W   W:::::W:::::WA:::::::::::::::::::::A     N::::::N    N::::::::::N        T:::::T          E:::::E               D:::::D     D:::::D          A:::::::::::::::::::::A            P::::P              L:::::L                    A:::::::::::::::::::::AC:::::C                E:::::E                          T:::::T        O:::::O     O:::::O            W:::::W:::::W   W:::::W:::::W         R::::R     R:::::R  I::::I          T:::::T          E:::::E                    H:::::H     H:::::H    I::::I              S:::::S     C:::::C              O:::::O     O:::::O  D:::::D     D:::::DE:::::E             
+//   E:::::E       EEEEEE  R::::R     R:::::R  I::::I C:::::C       CCCCCC             W:::::::::W     W:::::::::WA:::::AAAAAAAAAAAAA:::::A    N::::::N     N:::::::::N        T:::::T          E:::::E       EEEEEE  D:::::D    D:::::D          A:::::AAAAAAAAAAAAA:::::A           P::::P              L:::::L         LLLLLL    A:::::AAAAAAAAAAAAA:::::AC:::::C       CCCCCC  E:::::E       EEEEEE             T:::::T        O::::::O   O::::::O             W:::::::::W     W:::::::::W          R::::R     R:::::R  I::::I          T:::::T          E:::::E       EEEEEE       H:::::H     H:::::H    I::::I              S:::::S      C:::::C       CCCCCCO::::::O   O::::::O  D:::::D    D:::::D E:::::E       EEEEEE
+// EE::::::EEEEEEEE:::::ERR:::::R     R:::::RII::::::IIC:::::CCCCCCCC::::C              W:::::::W       W:::::::WA:::::A             A:::::A   N::::::N      N::::::::N      TT:::::::TT      EE::::::EEEEEEEE:::::EDDD:::::DDDDD:::::D          A:::::A             A:::::A        PP::::::PP          LL:::::::LLLLLLLLL:::::L   A:::::A             A:::::AC:::::CCCCCCCC::::CEE::::::EEEEEEEE:::::E           TT:::::::TT      O:::::::OOO:::::::O              W:::::::W       W:::::::W         RR:::::R     R:::::RII::::::II      TT:::::::TT      EE::::::EEEEEEEE:::::E     HH::::::H     H::::::HHII::::::IISSSSSSS     S:::::S       C:::::CCCCCCCC::::CO:::::::OOO:::::::ODDD:::::DDDDD:::::DEE::::::EEEEEEEE:::::E
+// E::::::::::::::::::::ER::::::R     R:::::RI::::::::I CC:::::::::::::::C               W:::::W         W:::::WA:::::A               A:::::A  N::::::N       N:::::::N      T:::::::::T      E::::::::::::::::::::ED:::::::::::::::DD          A:::::A               A:::::A       P::::::::P          L::::::::::::::::::::::L  A:::::A               A:::::ACC:::::::::::::::CE::::::::::::::::::::E           T:::::::::T       OO:::::::::::::OO                W:::::W         W:::::W          R::::::R     R:::::RI::::::::I      T:::::::::T      E::::::::::::::::::::E     H:::::::H     H:::::::HI::::::::IS::::::SSSSSS:::::S        CC:::::::::::::::C OO:::::::::::::OO D:::::::::::::::DD E::::::::::::::::::::E
+// E::::::::::::::::::::ER::::::R     R:::::RI::::::::I   CCC::::::::::::C                W:::W           W:::WA:::::A                 A:::::A N::::::N        N::::::N      T:::::::::T      E::::::::::::::::::::ED::::::::::::DDD           A:::::A                 A:::::A      P::::::::P          L::::::::::::::::::::::L A:::::A                 A:::::A CCC::::::::::::CE::::::::::::::::::::E           T:::::::::T         OO:::::::::OO                   W:::W           W:::W           R::::::R     R:::::RI::::::::I      T:::::::::T      E::::::::::::::::::::E     H:::::::H     H:::::::HI::::::::IS:::::::::::::::SS           CCC::::::::::::C   OO:::::::::OO   D::::::::::::DDD   E::::::::::::::::::::E
+// EEEEEEEEEEEEEEEEEEEEEERRRRRRRR     RRRRRRRIIIIIIIIII      CCCCCCCCCCCCC                 WWW             WWWAAAAAAA                   AAAAAAANNNNNNNN         NNNNNNN      TTTTTTTTTTT      EEEEEEEEEEEEEEEEEEEEEEDDDDDDDDDDDDD             AAAAAAA                   AAAAAAA     PPPPPPPPPP          LLLLLLLLLLLLLLLLLLLLLLLLAAAAAAA                   AAAAAAA   CCCCCCCCCCCCCEEEEEEEEEEEEEEEEEEEEEE           TTTTTTTTTTT           OOOOOOOOO                      WWW             WWW            RRRRRRRR     RRRRRRRIIIIIIIIII      TTTTTTTTTTT      EEEEEEEEEEEEEEEEEEEEEE     HHHHHHHHH     HHHHHHHHHIIIIIIIIII SSSSSSSSSSSSSSS                CCCCCCCCCCCCC     OOOOOOOOO     DDDDDDDDDDDDD      EEEEEEEEEEEEEEEEEEEEEE
 
 // ============================================================================
 // ERIC WANTED A PLACE TO WRITE HIS CODE

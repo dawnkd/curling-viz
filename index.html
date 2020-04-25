@@ -12,17 +12,35 @@
             <div class="col-lg-2" align="right">
                 <div id="controls" >
                     <div id="row">
-                        <input type="button" class="btn btn-danger reset" value="Reset Rocks" onclick="resetRocks_click()">
+                        <input type="button" class="btn btn-danger reset" value="Reset Rocks" id="resetButton" onclick="resetRocks_click()">
                         <input type="button" class="btn btn-danger reset" value="Reset Score" onclick="resetScore_click()">
                         <input type="button" class="btn btn-success score" value="Record Score" onclick="score_click()">
-                        <input type="button" class="btn btn-warning" value="Switch Modes" onclick="switchModes_click()">
-                        <div style="display:none;" id="newRock-div">
-                            <input type="button" class="btn btn-success" value="New Rock" onclick="newRock_click()">
-                        </div>
-                        <label class="checkbox form-check-label" for="showMeasures" class="noh">
+                        <label class="label form-check-label" for="showMeasures" class="noh">
                             <input type="checkbox" class="form-control-input" id="showMeasures" checked="checked" onchange="showMeasures_change()">
                             Show Circles
                         </label>
+                        <input type="button" class="btn btn-warning" value="Switch Modes" onclick="switchModes_click()">
+                        <div style="display:none;" id="simControl-div">
+                            <input type="button" class="btn btn-success" value="New Red Rock" id="newRed" onclick="newRock_click('red')">
+                            <input type="button" class="btn btn-success" value="New Yellow Rock" id="newYel" onclick="newRock_click('yellow')">
+                            <input type="button" class="btn btn-success" value="Throw Rock" onclick="throwRock_click()">
+                            <label class="label form-check-label" for="leftHanded" class="noh">
+                                <input type="checkbox" class="form-control-input" id="leftHanded" onchange="leftHanded_change()">
+                                Left Handed
+                            </label>
+                            <label class="label">
+                                Curl (CCW/CW)
+                                <input type="range" min="0" max="1" value="1" class="slider" id="curl">
+                            </label>
+                            <label class="label">
+                                Weight
+                                <input type="range" min="0" max="1000000" value="500000" class="slider" id="weight">
+                            </label>
+                            <label class="label">
+                                Angle
+                                <input type="range" min="0" max="1000000" value="500000" class="slider" id="angle">
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>

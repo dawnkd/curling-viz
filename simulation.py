@@ -22,7 +22,7 @@ def R_vec(v):
 
 # angle is deviation from y-axis clockwise
 def polar(v):
-    return la.norm(v), np.arctan2(*v)
+    return la.norm(v), -np.arctan2(*v)
 
 class Trajectory(object):
     def __init__(self, t0, p0, v0, psi0, curl=1):
@@ -113,16 +113,17 @@ def collide(traj, p2, t):
     v1 = traj.v_vec(t)
     
     d = p2 - p1
+    print(d, v1)
     
     R = R_vec(d)
     
-    v1_d = R @ v1
+    v1_d = R.T @ v1
 
     v2_d, v1_d = v1_d * np.array([[1, 0],
                                   [0, 1]])
     
-    v1 = R.T @ v1_d
-    v2 = R.T @ v2_d
+    v1 = R @ v1_d
+    v2 = R @ v2_d
     
     
     traj1 = Trajectory(t, p1, *polar(v1), traj.curl)
@@ -131,6 +132,7 @@ def collide(traj, p2, t):
     return traj1, traj2
 
 def simulate(still_rocks, toss):
+    print(still_rocks, toss)
     trajects = defaultdict(list)
     trajects[toss['id']].append(
         Trajectory(0, toss['p0'], toss['v0'], toss['psi0'], toss['curl']))

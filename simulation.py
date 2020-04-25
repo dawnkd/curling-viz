@@ -78,7 +78,7 @@ class Trajectory(object):
     # Binary search collision point
     def find_first_collision(self, q):
         a = self.t0
-        b = self.tf
+        b = a + self.tf
         
         # First attempt to find closest point the rocks get to one another
         for _ in range(n_collision_find):
@@ -151,12 +151,13 @@ def simulate(still_rocks, toss):
         trajects[rock_b].append(traj_b)
         
         del still_rocks[rock_b]
+        moving_rocks.add(rock_b)
     
     return trajects
 
 def flatten_trajectories(trajects, t_per_point):
     tfs = [traj.t0 for traj in trajects[1:]]
-    tfs.append(trajects[-1].tf)
+    tfs.append(trajects[-1].tf + trajects[-1].t0)
     
     return  [traj.serialize(t) 
                 for traj, tf in zip(trajects, tfs)

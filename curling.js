@@ -516,17 +516,22 @@ function* simId_generator() {
     }
 }
 
+const slider_to_curl = d3.scaleLinear().domain([0, 1]).range([-1, 1]);
 function get_curl() {
-    return $("#curl").val() == 0 ? -1 : 1;
+    return slider_to_curl($("#curl").val());
 }
 
+const slider_to_weight = d3.scaleLinear().domain([0, 1000000]).range([.1, 5]);
 function get_weight() {
-    return (5 / 1000000) * $("#weight").val()
+    return slider_to_weight($("#weight").val());
 }
 
+const slider_to_angle = d3.scaleLinear().domain([0, 1000000]).range([0.2, -0.2]);
 function get_angle() {
-    return -0.1 + (0.2 / 1000000) * $("#angle").val()
+    return slider_to_angle($("#angle").val());
 }
+
+const rad_to_deg = d3.scaleLinear().domain([0, 2 * Math.PI]).range([0, 360])
 
 
 // ============================================================================
@@ -558,16 +563,16 @@ var simId_gen = simId_generator()
 
 var simArrow = [];
 
-function updateSimRocks(simRocks) {
+function updateSimRocks(simRocks, rock_set="originalPositions") {
     const t = d3.transition()
         .duration(100);
 
-    layer4.selectAll(".simRock")
+    layer4.selectAll('.'+rock_set)
         .data(simRocks, d => d.id)
         .join(
             enter => {
                 enter.append("circle")
-                    .attr("class", d => `simRock ${d.color}${d.new ? "" : " new"}`)
+                    .attr("class", d => `${rock_set} simRock ${d.color}${d.new ? "" : " new"}`)
                     .attr("name", d => d.name)
                     .attr("id", d => d.id)
                     .attr("r", rockradius)
@@ -580,7 +585,7 @@ function updateSimRocks(simRocks) {
                     .attr("cx", d => d.x)
                     .attr("cy", d => d.y)
                     // if rock is not sitting, add no-sit class (darkens rock); if not scoring, add no-score class (greys out rock)
-                    .attr("class", d => `simRock ${d.color}${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
+                    .attr("class", d => `${rock_set} simRock ${d.color}${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
                 )
             },
             exit => {
@@ -592,6 +597,94 @@ function updateSimRocks(simRocks) {
                 // )
             }
         )
+}
+
+
+var web_socket = null;
+
+function setupWebSocket() {
+    reset = function() {
+        setTimeout(setupWebSocket, 1000);
+    };
+    web_socket = new WebSocket(`ws://${location.hostname}:5000`);
+    web_socket.onerror = reset;
+    web_socket.onclose = reset;
+    web_socket.onopen = function() {
+        console.log("Opened connection to server");
+    }
+}
+
+setupWebSocket();
+
+function simulate(still_rocks, toss, callback) {
+    const request = new JSON_RPC.Request('run_simulation', [still_rocks, toss]);
+    
+    web_socket.onmessage = function(event) {
+        const response = new JSON_RPC.parse(event.data);
+        if(response.error) {
+            console.log(response.error);
+        } else {
+            callback(response.result);
+        }
+        
+        return true;
+    };
+    
+    web_socket.send(request.toString());
+}
+
+const waypointColor = d3.scaleOrdinal(d3.schemeCategory10)
+
+function updateTrajectories(trajects) {
+    console.log(trajects);
+    layerPi.selectAll(".trajectory")
+    .data(Object.entries(trajects), d => d[0])
+    .join("g")
+        .attr("class", "trajectory")
+        .attr("fill", d => waypointColor(d[0]))
+    .selectAll(".waypoint")
+    .data(d => d[1])
+    .join(
+        enter => enter.append("polygon")
+        .attr("points", "0,0 -1,-1 -2,-1 0,1 2,-1 1,-1")
+        .attr("class", "waypoint"),
+          update => update,
+          exit => exit.remove()
+    )
+    .attr("transform", 
+          d => `translate(${d.p[0]} ${sheet_length - d.p[1]})
+          scale(0.1)
+          rotate(${180-rad_to_deg(d.psi)})
+          `)
+}
+
+var onSimParameterChange_lock = 0;
+function onSimParameterChange()
+{
+    if(onSimParameterChange_lock++)
+        return;
+    
+    still_rocks = Object.fromEntries(
+        simRocks.filter(d => !d.new)
+                .map(d => [d.id, [d.x, sheet_length - d.y]]));
+    
+    toss_rock = simRocks.find(d => d.new);
+    toss = {
+        id: toss_rock.id,
+        p0: [toss_rock.x, 0],
+        v0: get_weight(),
+        psi0: get_angle(),
+        curl: get_curl()
+    };
+    
+    simulate(still_rocks, toss, function(trajects) {
+        updateTrajectories(trajects);
+        if(--onSimParameterChange_lock)
+        {
+            onSimParameterChange_lock = 0;
+            onSimParameterChange();
+        }
+    });
 }
 
 // ============================================================================
@@ -793,6 +886,8 @@ function leftHanded_change() {
 
 }
 
+$(".simparam").on("input", onSimParameterChange);
+
 // ============================================================================
 // TTTTTTTTTTTTTTTTTTTTTTTUUUUUUUU     UUUUUUUUTTTTTTTTTTTTTTTTTTTTTTT     OOOOOOOOO     RRRRRRRRRRRRRRRRR   IIIIIIIIII               AAA               LLLLLLLLLLL             
 // T:::::::::::::::::::::TU::::::U     U::::::UT:::::::::::::::::::::T   OO:::::::::OO   R::::::::::::::::R  I::::::::I              A:::A              L:::::::::L             
@@ -873,62 +968,4 @@ $(".tut-pin").on("mouseleave", function(){
 // ERIC WANTED A PLACE TO WRITE HIS CODE
 // ============================================================================
 
-const rad_to_deg = d3.scaleLinear().domain([0, 2 * Math.PI]).range([0, 360])
-
-var web_socket = null;
-
-function setupWebSocket() {
-    reset = function() {
-        setTimeout(setupWebSocket, 1000);
-    };
-    web_socket = new WebSocket(`ws://${location.hostname}:5000`);
-    web_socket.onerror = reset;
-    web_socket.onclose = reset;
-    web_socket.onopen = function() {
-        console.log("Opened connection to server");
-    }
-}
-
-setupWebSocket();
-
-function simulate(still_rocks, toss, callback) {
-    const request = new JSON_RPC.Request('run_simulation', [still_rocks, toss]);
-    
-    web_socket.onmessage = function(event) {
-        const response = new JSON_RPC.parse(event.data);
-        if(response.error) {
-            console.log(response.error);
-        } else {
-            callback(response.result);
-        }
-        
-        return true;
-    };
-    
-    web_socket.send(request.toString());
-}
-
-const waypointColor = d3.scaleOrdinal(d3.schemeCategory10)
-
-function updateTrajectories(trajects) {
-    layerPi.selectAll(".trajectory")
-        .data(Object.entries(trajects), d => d[0])
-        .join("g")
-            .attr("class", "trajectory")
-            .attr("fill", d => waypointColor(d[0]))
-        .selectAll(".waypoint")
-        .data(d => d[1])
-        .join(
-            enter => enter.append("polygon")
-                .attr("points", "0,0 -1,-1 -2,-1 0,1 2,-1 1,-1")
-                .attr("class", "waypoint"),
-            update => update,
-            exit => exit.remove()
-        )
-            .attr("transform", 
-                  d => `translate(${d.p[0]} ${sheet_length - d.p[1]})
-                        scale(0.1)
-                        rotate(${180-rad_to_deg(d.psi)})
-                        `)
-}
-
+// :)

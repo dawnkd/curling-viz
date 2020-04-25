@@ -66,7 +66,7 @@ for (let i = 1; i <= 8; ++i) {
     y = rockwidth * row + spacer * (row-1)
     rocks.push({x: x, y: y, name: `yel${i}`, color: "yellow", id: i+8, sitting: true, score: true})
 }
-var reset = _.cloneDeep(rocks)
+var rocksReset = _.cloneDeep(rocks)
 
 var measures = []
 
@@ -212,7 +212,10 @@ layer1.append("circle")
     .attr("cy", pin.y)
 
 
-updateRocks(rocks)
+updateRocks(rocks);
+$(function() {
+    update_score();
+});
 
 // ----------------------------------------------------------------------------
 // ##     ## ########  ########     ###    ######## ########    ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######  
@@ -316,7 +319,7 @@ function updateMeasures(measures) {
                 exit.remove()
             }
         )
-
+    update_score()
     check_showCircles()
 }
 
@@ -466,7 +469,6 @@ function find(arr, test, ctx) {
 function check_showCircles() {
     $(".measure").each(function() {
         let test = $("#showMeasures")[0].checked && ((mode && $(this)[0].id < 0) || (!mode && !($(this)[0].id < 0)))
-        console.log($(this)[0].id, test)
         if (test) {
             $(this).removeClass("hide-measure")
         } else {
@@ -528,6 +530,53 @@ function get_angle() {
     return -0.1 + (0.2 / 1000000) * $("#angle").val()
 }
 
+function update_score() {
+    let order = mode ? simRocks.sort(scoreSort) : rocks.sort(scoreSort)
+    let first = order[0]
+    let first_nonscoring = find(order, r => r.color != first.color || !rockInHouse(r))
+
+    let score = rockInPlay(first) ? first_nonscoring : 0
+
+    if (score > 0) {
+        // determine which team scored and increment scores
+        var scoring_team = first.color
+        let team_abbr = scoring_team.slice(0,3)
+
+
+        let club_selector = `#club_scoreboard #club_${team_abbr}${scoring_team == "red" ? red_score+score : yel_score+score}`
+        let tv_selector = `#tv_scoreboard #tv_${team_abbr}${current_end}`
+
+        // update club scoreboard
+        if ($(`#span${current_end}`).length) {
+            $(`#club_scoreboard`).find(`#span${current_end}`).remove()
+        }
+        $(club_selector).append(`<span id="span${current_end}" class="club-score">${current_end}</span>`)
+        // update tv scoreboard
+        $(tv_selector).text(score)
+        $(`#tv_scoreboard #tv_${team_abbr == "red" ? "yel" : "red"}${current_end}`).text(0)
+
+        // let to_fade = `${club_selector}, ${tv_selector}`
+        // $(to_fade).addClass("fade")
+        // set
+
+
+
+    } else { // blank end
+        // update club scoreboard
+        if ($(`#span${current_end}`).length) {
+            $(`#club_scoreboard`).find(`#span${current_end}`).remove()
+        }
+        $(`#club_scoreboard #club_${hammer}16`).append(`<span id="span${current_end}" class="blank">${current_end}</span>`)
+        // update tv scoreboard
+        $(`#tv_scoreboard #tv_red${current_end}`).text(score)
+        $(`#tv_scoreboard #tv_yel${current_end}`).text(score)
+    }
+
+    $(`#tv_scoreboard #tv_redtotal`).text(red_score+score)
+    $(`#tv_scoreboard #tv_yeltotal`).text(yel_score+score)
+
+    return {order:order, first:first, first_nonscoring:first_nonscoring, score:score}
+}
 
 // ============================================================================
 
@@ -616,7 +665,7 @@ function updateSimRocks(simRocks) {
 // ============================================================================
 
 function resetRocks_click() {
-    rocks = _.cloneDeep(reset)
+    rocks = _.cloneDeep(rocksReset)
     measures = []
     updateRocks(rocks)
     updateMeasures(measures)
@@ -631,10 +680,7 @@ function resetScore_click() {
 }
 
 function score_click() {
-    let order = rocks.sort(scoreSort)
-    let first = order[0]
-    let first_nonscoring = find(order, r => r.color != first.color || !rockInHouse(r))
-
+    const {order, first, first_nonscoring, score} = update_score()
     // grey out rocks that are not scoring
     order.forEach((e,i) => {
         if (rockInPlay(e)) {
@@ -647,56 +693,25 @@ function score_click() {
             }
         }
     })
-    
-    let score = rockInPlay(first) ? first_nonscoring : 0
 
     if (score > 0) {
-        // determine which team scored and increment scores
-        var scoring_team = first.color
-        let team_abbr = scoring_team.slice(0,3)
-        if (scoring_team == "red") {
+        if (first.color == "red") {
             red_score += score
         } else {
             yel_score += score
         }
-
-        let club_selector = `#club_scoreboard #club_${team_abbr}${scoring_team == "red" ? red_score : yel_score}`
-        let tv_selector = `#tv_scoreboard #tv_${team_abbr}${current_end}`
-
-        // update club scoreboard
-        $(club_selector).append(`<span class="club-score">${current_end}</span>`)
-        // update tv scoreboard
-        $(tv_selector).text(score)
-        $(`#tv_scoreboard #tv_${team_abbr == "red" ? "yel" : "red"}${current_end}`).text(0)
-
-        // let to_fade = `${club_selector}, ${tv_selector}`
-        // $(to_fade).addClass("fade")
-        // set
-
-
-
-    } else { // blank end
-        // update club scoreboard
-        $(`#club_scoreboard #club_${hammer}16`).append(`<span class="blank">${current_end}</span>`)
-        // update tv scoreboard
-        $(`#tv_scoreboard #tv_red${current_end}`).text(score)
-        $(`#tv_scoreboard #tv_yel${current_end}`).text(score)
     }
-
-    $(`#tv_scoreboard #tv_redtotal`).text(red_score)
-    $(`#tv_scoreboard #tv_yeltotal`).text(yel_score)
-
-    let selector = ``
     
-    score_flag = true;
+    
     if (score == 0) {
         // hammer doesn't change
     } else {
         // set hammer to the team that didn't score
-        hammer = scoring_team == "red" ? "yel" : "red";
+        hammer = first.color == "red" ? "yel" : "red";
     }
     current_end++;
 
+    score_flag = true;
     updateRocks(order)
     updateMeasures(measures)
 }

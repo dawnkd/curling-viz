@@ -209,3 +209,8 @@ to mactch btn classes
 .measure.no-score {stroke: grey;}
 
 #mode-label {background-color: lightgrey; cursor: default;}
+
+path.trajectory {
+    fill: none;
+    stroke-width: .02;
+}

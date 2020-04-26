@@ -682,29 +682,45 @@ function simulate(still_rocks, toss, callback) {
     web_socket.send(request.toString());
 }
 
-const waypointColor = d3.scaleOrdinal(d3.schemeCategory10)
+const trajectoryColor = d3.scaleOrdinal(d3.schemeCategory10);
+const trajectoryLine = d3.line().x(d => d.p[0]).y(d => sheet_length - d.p[1]);
 
-function updateTrajectories(trajects) {
-    console.log(trajects);
+function updateTrajectories(traject_data) {
+    flat_data = Object.entries(traject_data);
+    
+    positionWaypoints = d => {
+        return d.attr("transform", 
+            d => `translate(${d.p[0]} ${sheet_length - d.p[1]})
+            scale(${0.03 + 0.07*d.v})
+            rotate(${180-rad_to_deg(d.psi)})
+            `);
+    }
+    
     layerPi.selectAll(".trajectory")
-    .data(Object.entries(trajects), d => d[0])
-    .join("g")
-        .attr("class", "trajectory")
-        .attr("fill", d => waypointColor(d[0]))
-    .selectAll(".waypoint")
-    .data(d => d[1])
-    .join(
-        enter => enter.append("polygon")
-        .attr("points", "0,0 -1,-1 -2,-1 0,1 2,-1 1,-1")
-        .attr("class", "waypoint"),
-          update => update,
-          exit => exit.remove()
-    )
-    .attr("transform", 
-          d => `translate(${d.p[0]} ${sheet_length - d.p[1]})
-          scale(0.1)
-          rotate(${180-rad_to_deg(d.psi)})
-          `)
+        .data(flat_data, d => d[0])
+        .join("g")
+            .attr("class", "trajectory")
+            .attr("fill", d => trajectoryColor(d[0]))
+        .selectAll(".waypoint")
+        .data(d => d[1])
+        .join(
+            enter => enter.append("polygon")
+                .attr("points", "0,0 -1,-1 -2,-1 0,1 2,-1 1,-1")
+                .attr("class", "waypoint")
+                .call(positionWaypoints),
+            update => update
+                .transition().duration(50)
+                .call(positionWaypoints),
+            exit => exit.remove()
+        );
+    
+    layerPi.selectAll("path")
+        .data(flat_data, d => d[0])
+        .join("path")
+            .attr("class", "trajectory")
+            .attr("stroke", d => trajectoryColor(d[0]))
+        .transition().duration(50)
+            .attr("d", d => trajectoryLine(d[1]));
 }
 
 var onSimParameterChange_lock = 0;

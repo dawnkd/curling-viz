@@ -217,15 +217,137 @@ $(function() {
     update_score();
 });
 
-// ----------------------------------------------------------------------------
-// ##     ## ########  ########     ###    ######## ########    ######## ##     ## ##    ##  ######  ######## ####  #######  ##    ##  ######  
-// ##     ## ##     ## ##     ##   ## ##      ##    ##          ##       ##     ## ###   ## ##    ##    ##     ##  ##     ## ###   ## ##    ## 
-// ##     ## ##     ## ##     ##  ##   ##     ##    ##          ##       ##     ## ####  ## ##          ##     ##  ##     ## ####  ## ##       
-// ##     ## ########  ##     ## ##     ##    ##    ######      ######   ##     ## ## ## ## ##          ##     ##  ##     ## ## ## ##  ######  
-// ##     ## ##        ##     ## #########    ##    ##          ##       ##     ## ##  #### ##          ##     ##  ##     ## ##  ####       ## 
-// ##     ## ##        ##     ## ##     ##    ##    ##          ##       ##     ## ##   ### ##    ##    ##     ##  ##     ## ##   ### ##    ## 
-//  #######  ##        ########  ##     ##    ##    ########    ##        #######  ##    ##  ######     ##    ####  #######  ##    ##  ######  
-// ----------------------------------------------------------------------------
+// HHHHHHHHH     HHHHHHHHH               AAA                  CCCCCCCCCCCCCKKKKKKKKK    KKKKKKK        SSSSSSSSSSSSSSS VVVVVVVV           VVVVVVVV      GGGGGGGGGGGGG
+// H:::::::H     H:::::::H              A:::A              CCC::::::::::::CK:::::::K    K:::::K      SS:::::::::::::::SV::::::V           V::::::V   GGG::::::::::::G
+// H:::::::H     H:::::::H             A:::::A           CC:::::::::::::::CK:::::::K    K:::::K     S:::::SSSSSS::::::SV::::::V           V::::::V GG:::::::::::::::G
+// HH::::::H     H::::::HH            A:::::::A         C:::::CCCCCCCC::::CK:::::::K   K::::::K     S:::::S     SSSSSSSV::::::V           V::::::VG:::::GGGGGGGG::::G
+//   H:::::H     H:::::H             A:::::::::A       C:::::C       CCCCCCKK::::::K  K:::::KKK     S:::::S             V:::::V           V:::::VG:::::G       GGGGGG
+//   H:::::H     H:::::H            A:::::A:::::A     C:::::C                K:::::K K:::::K        S:::::S              V:::::V         V:::::VG:::::G              
+//   H::::::HHHHH::::::H           A:::::A A:::::A    C:::::C                K::::::K:::::K          S::::SSSS            V:::::V       V:::::V G:::::G              
+//   H:::::::::::::::::H          A:::::A   A:::::A   C:::::C                K:::::::::::K            SS::::::SSSSS        V:::::V     V:::::V  G:::::G    GGGGGGGGGG
+//   H:::::::::::::::::H         A:::::A     A:::::A  C:::::C                K:::::::::::K              SSS::::::::SS       V:::::V   V:::::V   G:::::G    G::::::::G
+//   H::::::HHHHH::::::H        A:::::AAAAAAAAA:::::A C:::::C                K::::::K:::::K                SSSSSS::::S       V:::::V V:::::V    G:::::G    GGGGG::::G
+//   H:::::H     H:::::H       A:::::::::::::::::::::AC:::::C                K:::::K K:::::K                    S:::::S       V:::::V:::::V     G:::::G        G::::G
+//   H:::::H     H:::::H      A:::::AAAAAAAAAAAAA:::::AC:::::C       CCCCCCKK::::::K  K:::::KKK                 S:::::S        V:::::::::V       G:::::G       G::::G
+// HH::::::H     H::::::HH   A:::::A             A:::::AC:::::CCCCCCCC::::CK:::::::K   K::::::K     SSSSSSS     S:::::S         V:::::::V         G:::::GGGGGGGG::::G
+// H:::::::H     H:::::::H  A:::::A               A:::::ACC:::::::::::::::CK:::::::K    K:::::K     S::::::SSSSSS:::::S          V:::::V           GG:::::::::::::::G
+// H:::::::H     H:::::::H A:::::A                 A:::::A CCC::::::::::::CK:::::::K    K:::::K     S:::::::::::::::SS            V:::V              GGG::::::GGG:::G
+// HHHHHHHHH     HHHHHHHHHAAAAAAA                   AAAAAAA   CCCCCCCCCCCCCKKKKKKKKK    KKKKKKK      SSSSSSSSSSSSSSS               VVV                  GGGGGG   GGGG
+
+var hack = d3.select("#hack")
+var height2 = sixfeet*2,
+    width2 = width,
+    sixinches = sixfeet/12,
+    hack_width = sixinches,
+    hack_height = sixinches*4/3,
+    hack_y = height2 - hack_height*2,
+    left_hack_x = pin.x - sixinches - hack_width,
+    right_hack_x = pin.x + sixinches,
+    hack_backline_pos = hack_y - sixfeet
+
+var hack_pin = {
+    x: pin.x,
+    y: hack_backline_pos - sixfeet
+}
+
+// $("#hack_scores").attr("style", `height:${279.5}`)
+$("#hack_scores").height(279.5)
+
+var svg2 = hack.append("svg")
+    .attr("width", 350)
+    .attr("height", 269.5) // 350/4.75*3.6576 (12 feet) 
+    .attr("viewBox", `0 0 ${width2} ${height2}`)
+    .append("g")
+    .attr("class", "hack")
+
+// lacker = hack + layer
+var lacker1 = svg2.append('g')
+var lacker2 = svg2.append('g')
+var lacker3 = svg2.append('g')
+
+lacker1.append("rect")
+    .attr("class", "sheet white")
+    .attr("width", width2)
+    .attr("height", height2)
+    .attr("x", 0)
+    .attr("y", 0)
+
+// left hack
+lacker1.append("rect")
+    .attr("class", "hack")
+    .attr("width", hack_width)
+    .attr("height", hack_height)
+    .attr("x", left_hack_x)
+    .attr("y", hack_y)
+
+// right hack
+lacker1.append("rect")
+    .attr("class", "hack")
+    .attr("width", hack_width)
+    .attr("height", hack_height)
+    .attr("x", right_hack_x)
+    .attr("y", hack_y)
+
+// backline
+lacker1.append("line")
+    .attr("name", "backline")
+    .attr("class", "house line")
+    .attr("x1", 0)
+    .attr("y1", hack_backline_pos)
+    .attr("x2", width2)
+    .attr("y2", hack_backline_pos)
+    .style("stroke-width", linewidth)
+
+// 12 foot
+lacker1.append("circle")
+    .attr("name", "twelve")
+    .attr("class", "house blue line")
+    .attr("r", radii.twelve)
+    .attr("cx", hack_pin.x)
+    .attr("cy", hack_pin.y)
+
+// 8 foot
+lacker1.append("circle")
+    .attr("name", "eight")
+    .attr("class", "house white line")
+    .attr("r", radii.eight)
+    .attr("cx", hack_pin.x)
+    .attr("cy", hack_pin.y)
+
+// 4 foot
+lacker1.append("circle")
+    .attr("name", "four")
+    .attr("class", "house red line")
+    .attr("r", radii.four)
+    .attr("cx", hack_pin.x)
+    .attr("cy", hack_pin.y)
+
+// centerline
+lacker1.append("line")
+    .attr("name", "centerline")
+    .attr("class", "house line")
+    .attr("x1", hack_pin.x)
+    .attr("y1", 0)
+    .attr("x2", hack_pin.x)
+    .attr("y2", height2 - hack_height)
+    .style("stroke-width", linewidth)
+
+// TTTTTTTTTTTTTTTTTTTTTTTUUUUUUUU     UUUUUUUUTTTTTTTTTTTTTTTTTTTTTTT     OOOOOOOOO     RRRRRRRRRRRRRRRRR   IIIIIIIIII               AAA               LLLLLLLLLLL             
+// T:::::::::::::::::::::TU::::::U     U::::::UT:::::::::::::::::::::T   OO:::::::::OO   R::::::::::::::::R  I::::::::I              A:::A              L:::::::::L             
+// T:::::::::::::::::::::TU::::::U     U::::::UT:::::::::::::::::::::T OO:::::::::::::OO R::::::RRRRRR:::::R I::::::::I             A:::::A             L:::::::::L             
+// T:::::TT:::::::TT:::::TUU:::::U     U:::::UUT:::::TT:::::::TT:::::TO:::::::OOO:::::::ORR:::::R     R:::::RII::::::II            A:::::::A            LL:::::::LL             
+// TTTTTT  T:::::T  TTTTTT U:::::U     U:::::U TTTTTT  T:::::T  TTTTTTO::::::O   O::::::O  R::::R     R:::::R  I::::I             A:::::::::A             L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R::::R     R:::::R  I::::I            A:::::A:::::A            L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R   I::::I           A:::::A A:::::A           L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R:::::::::::::RR    I::::I          A:::::A   A:::::A          L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R::::RRRRRR:::::R   I::::I         A:::::A     A:::::A         L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R::::R     R:::::R  I::::I        A:::::AAAAAAAAA:::::A        L:::::L               
+//         T:::::T         U:::::D     D:::::U         T:::::T        O:::::O     O:::::O  R::::R     R:::::R  I::::I       A:::::::::::::::::::::A       L:::::L               
+//         T:::::T         U::::::U   U::::::U         T:::::T        O::::::O   O::::::O  R::::R     R:::::R  I::::I      A:::::AAAAAAAAAAAAA:::::A      L:::::L         LLLLLL
+//       TT:::::::TT       U:::::::UUU:::::::U       TT:::::::TT      O:::::::OOO:::::::ORR:::::R     R:::::RII::::::II   A:::::A             A:::::A   LL:::::::LLLLLLLLL:::::L
+//       T:::::::::T        UU:::::::::::::UU        T:::::::::T       OO:::::::::::::OO R::::::R     R:::::RI::::::::I  A:::::A               A:::::A  L::::::::::::::::::::::L
+//       T:::::::::T          UU:::::::::UU          T:::::::::T         OO:::::::::OO   R::::::R     R:::::RI::::::::I A:::::A                 A:::::A L::::::::::::::::::::::L
+//       TTTTTTTTTTT            UUUUUUUUU            TTTTTTTTTTT           OOOOOOOOO     RRRRRRRR     RRRRRRRIIIIIIIIIIAAAAAAA                   AAAAAAALLLLLLLLLLLLLLLLLLLLLLLL
 
 function updateRocks(rocks) {
     const t = d3.transition()
@@ -503,35 +625,36 @@ function manageMeasures(rock) {
 }
 
 function newSimRock(color) {
-    let x = width/2 + (get_leftHanded() ? rockradius : -rockradius)
-    let y = height - 2*svg_rockradius
-    let id = simId_gen.next().value
-    simRocks.push({x: x, y: y, color: color, id: id, sitting: true, score: true, new: true})
-    let magnitude = get_weight()
-    let arrow_x = magnitude*Math.sin(-get_angle())
-    let arrow_y = magnitude*Math.cos(-get_angle())
-    simArrow.push({
-        x1: x, 
-        y1: y, 
-        x2: x - arrow_x,
-        y2: y - arrow_y, 
+    let {x1, y1, x2, y2} = getHackCoords(width2, height2)
+    // let id = simId_gen.next().value
+    id = "i am an id"
+    hackRock.push({x: x1, y: y1, color: color, id: id, sitting: true, score: true, new: true})
+    hackArrow.push({
+        x1: x1, 
+        y1: y1, 
+        x2: x2,
+        y2: y2, 
         id: id,
     })
+
+    c = getHackCoords(width, sheet_length)
+    simRocks.push({x: c.x1, y: c.y1, color: color, id: simId_gen.next().value, sitting: true, score: true, new: true})
 }
 
-function getArrowCoords() {
-    let x = width/2 + (get_leftHanded() ? rockradius : -rockradius)
-    let y = height - 2*svg_rockradius
-    let arrow_x = get_weight()*Math.sin(-get_angle())
-    let arrow_y = get_weight()*Math.cos(-get_angle())
+function getHackCoords(width, height) {
+    let x = width/2 + (get_leftHanded() ? rockradius*3/2 : -sixinches*3/2)
+    let y = height - sixinches - hack_height - rockradius*5/2
+    let mag = get_weight()/2
+    let arrow_x = x - mag*Math.sin(get_angle())
+    let arrow_y = y - mag*Math.cos(-get_angle())
     return {x1:x, y1:y, x2:arrow_x, y2:arrow_y}
 }
 
 function* simId_generator() {
     id = -1
     while (true) {
-        ids = simRocks.map(sr => sr.id)
-        yield ids ? Math.min(... ids) - 1 : id
+        ids = rocks.map(sr => -sr.id)
+        yield ids.length ? Math.min(... ids) - 1 : id
     }
 }
 
@@ -647,9 +770,10 @@ function update_score() {
 
 var teams = {"red":"red", "yel":"yellow"};
 var simRocks = [];
+var hackRock = [];
 var simId_gen = simId_generator()
 
-var simArrow = [];
+var hackArrow = [];
 
 function getSimRock(id) {
     return simRocks.find(d => d.id == id);
@@ -687,6 +811,34 @@ function updateSimRocks(simRocks, rock_set="originalPositions") {
                 //     .attr("cx", d => d.color == "red" ? rockwidth*-2 : width + rockwidth*2)
                 //     .remove()
                 // )
+            }
+        )
+}
+
+function updateHackRock(hackRock) {
+    const t = d3.transition()
+        .duration(100);
+
+    lacker3.selectAll(".hackRock")
+        .data(hackRock, d => d.id)
+        .join(
+            enter => {
+                enter.append("circle")
+                    .attr("class", d => `hackRock ${d.color}${d.new ? "" : " new"}`)
+                    .attr("name", d => d.name)
+                    .attr("id", d => d.id)
+                    .attr("r", rockradius)
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y)
+                    .style("stroke-width", rockoutline)
+            },
+            update => {
+                update.call(update => update.transition(t)
+                    .attr("cx", d => d.x)
+                    .attr("cy", d => d.y))
+            },
+            exit => {
+                exit.remove()
             }
         )
 }
@@ -819,6 +971,13 @@ function onSimParameterChange()
         psi0: get_angle(),
         curl: get_curl()
     };
+
+    let {x1, y1, x2, y2} = getHackCoords(width2, height2)
+    hackArrow[0].x1 = x1
+    hackArrow[0].y1 = y1
+    hackArrow[0].x2 = x2
+    hackArrow[0].y2 = y2
+    updatehackArrow(hackArrow)
     
     simulate(still_rocks, toss, function(trajects) {
         currentTrajectData = trajects;
@@ -840,23 +999,31 @@ function onTimeChange() {
     updateProjectedSimRocks(currentTrajectData, get_time());
 }
 
-function updateSimArrow(simArrow) {
+function updatehackArrow(hackArrow) {
     const t = d3.transition()
         .duration(100);
 
-    layer3.selectAll(".arrow")
-        .data(simArrow, d => d.id)
+    lacker2.selectAll(".arrow")
+        .data(hackArrow, d => d.id)
         .join(
             enter => {
                 enter.append("line")
-                    .attr("class", "line")
+                    .attr("class", "arrow line")
                     .attr("x1", d => d.x1)
                     .attr("y1", d => d.y1)
                     .attr("x2", d => d.x2)
                     .attr("y2", d => d.y2)
                     .attr("id", d => d.id)
                     .style("stroke-width", linewidth)
-            }
+            },
+            update => {
+                update.call(update => update.transition(t)
+                    .attr("x1", d => d.x1)
+                    .attr("y1", d => d.y1)
+                    .attr("x2", d => d.x2)
+                    .attr("y2", d => d.y2))
+            },
+            exit => exit.remove()
         )
 }
 
@@ -942,6 +1109,7 @@ function switchModes_click() {
     //enter simulation mode
     if (mode == 0) {
         $("#simControl-div").show()
+        $("#hack").show()
         $("#resetButton").prop("disabled", true)
         // update mode text
         $("#mode-label").text("Simulation Mode")
@@ -976,6 +1144,7 @@ function switchModes_click() {
     // enter tutorial mode
     else {
         $("#simControl-div").hide()
+        $("#hack").hide()
         $("#resetButton").prop("disabled", false)
         // update mode text
         $("#mode-label").text("Tutorial Mode")
@@ -1011,8 +1180,8 @@ function newRock_click(color) {
     $("#newRed").prop("disabled", true)
     $("#newYel").prop("disabled", true)
     newSimRock(color)
-    updateSimRocks(simRocks)
-    updateSimArrow(simArrow)
+    updateHackRock(hackRock)
+    updatehackArrow(hackArrow)
 }
 
 function throwRock_click() {
@@ -1023,9 +1192,17 @@ function throwRock_click() {
 
 function leftHanded_change() {
     let i = simRocks.findIndex(sr => sr.new)
-    simRocks[i].x = width/2 + (get_leftHanded() ? rockradius : -rockradius)
+    simRocks[i].x = getHackCoords(width, sheet_length).x1
     updateSimRocks(simRocks)
-
+    let j = hackRock.findIndex(hr => hr.new)
+    let {x1, y1, x2, y2} = getHackCoords(width2, height2)
+    hackRock[j].x = x1
+    updateHackRock(hackRock)
+    hackArrow[0].x1 = x1
+    hackArrow[0].y1 = y1
+    hackArrow[0].x2 = x2
+    hackArrow[0].y2 = y2
+    updatehackArrow(hackArrow)
 }
 
 $(".simparam").on("input", onSimParameterChange);

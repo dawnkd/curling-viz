@@ -3,7 +3,7 @@ import numpy.linalg as la
 from collections import defaultdict
 
 g = 9.8
-k_drag = .0006
+k_drag = .0004
 k_fric = .01
 r_rock = .1524
 rp = .117

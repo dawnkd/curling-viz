@@ -5,11 +5,17 @@ body {
     font-size: 14px;
 }
 
+.container {
+    max-width: 1600px;
+}
+
 /*===========================================================================*/
 /*LAYOUT CLASSES*/
 /*===========================================================================*/
 
-#curling, #controls, #club_scoreboard {padding-top: 10px;}
+#curling, #controls, #club_scoreboard, #hack {padding-top: 10px;}
+
+#hack {padding-right: 10px;}
 
 #club_scoreboard {
     /*background-clip: content-box;*/
@@ -99,7 +105,7 @@ from https://github.com/twbs/bootstrap/blob/master/dist/css/bootstrap.css o
 to mactch btn classes
 */
 .label{
-    display: inline-block;
+    display: block;
     font-weight: 400;
     line-height: 1.5;
     color: white;
@@ -121,8 +127,21 @@ to mactch btn classes
 }
 
 .slider {
-    width: 120px;
+
+    width: 50px;
+    
     margin-bottom: 0px !important;
+}
+
+#angle {
+    width: 300px;
+}
+
+input[type=range][orient=vertical] {
+    writing-mode: bt-lr; /* IE */
+    -webkit-appearance: slider-vertical; /* WebKit */
+    width: 50px;
+    height: 300px;
 }
 
 .btn:disabled {cursor:default;}
@@ -168,9 +187,10 @@ to mactch btn classes
 /*===========================================================================*/
 /*SVG CLASSES*/
 /*===========================================================================*/
-.curling * {stroke-width: .01}
+.curling *, #hack * {stroke-width: .01}
 
-.rock, .simRock {stroke: grey; }
+
+.rock, .simRock, .hackRock {stroke: grey; }
 
 .rock {
     cursor: grab;
@@ -184,11 +204,11 @@ to mactch btn classes
     cursor: -webkit-grabbing;
 }
 
-.rock.red, .simRock.red {fill: red;}
+.rock.red, .simRock.red, .hackRock.red {fill: red;}
 
 .house.red {fill : rgba(255, 0, 0, 0.4);}
 
-.rock.yellow, .simRock.yellow {fill: yellow;}
+.rock.yellow, .simRock.yellow, .hackRock.yellow {fill: yellow;}
 
 .blue {fill: rgba(0, 0, 255, 0.4);}
 
@@ -214,3 +234,6 @@ path.trajectory {
     fill: none;
     stroke-width: .02;
 }
+
+.hack {fill:black;}
+

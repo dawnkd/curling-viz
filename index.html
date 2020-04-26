@@ -9,36 +9,32 @@
 <body>
     <div class="container">
         <div class="row">
-            <div class="col-lg-2" align="right">
-                <div id="controls" >
-                    <div id="row">
-                        <input type="button" class="btn btn-danger reset" value="Reset Rocks" id="resetButton" onclick="resetRocks_click()">
-                        <input type="button" class="btn btn-danger reset" value="Reset Score" onclick="resetScore_click()">
-                        <input type="button" class="btn btn-success score" value="Record Score" onclick="score_click()">
-                        <label class="label form-check-label" for="showMeasures" class="noh">
-                            <input type="checkbox" class="form-control-input" id="showMeasures" checked="checked" onchange="showMeasures_change()">
-                            Show Circles
-                        </label>
-                        <input type="button" class="btn btn-warning" value="Switch Modes" onclick="switchModes_click()">
-                        <div style="display:none;" id="simControl-div">
-                            <input type="button" class="btn btn-success" value="New Red Rock" id="newRed" onclick="newRock_click('red')">
-                            <input type="button" class="btn btn-success" value="New Yellow Rock" id="newYel" onclick="newRock_click('yellow')">
-                            <input type="button" class="btn btn-success" value="Throw Rock" onclick="throwRock_click()">
-                            <label class="label form-check-label" for="leftHanded" class="noh">
-                                <input type="checkbox" class="form-control-input" id="leftHanded" onchange="leftHanded_change()">
-                                Left Handed
-                            </label>
-                            <label class="label">
-                                Curl (CCW/CW)
-                                <input type="range" min="0" max="1" value="1" class="simparam slider" id="curl">
-                            </label>
-                            <label class="label">
-                                Weight
-                                <input type="range" min="0" max="1000000" value="500000" class="simparam slider" id="weight">
-                            </label>
-                            <label class="label">
-                                Angle
-                                <input type="range" min="0" max="1000000" value="500000" class="simparam slider" id="angle">
+            <div class="col-lg-2">
+                <div id="controls" class="">
+
+                    <div class="row">
+                        <div class="col">
+                            <input type="button" class="btn btn-danger reset float-right" value="Reset Rocks" id="resetButton" onclick="resetRocks_click()">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <input type="button" class="btn btn-danger reset float-right" value="Reset Score" onclick="resetScore_click()">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <input type="button" class="btn btn-success score float-right" value="Record Score" onclick="score_click()">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label class="label form-check-label float-right" for="showMeasures" class="noh">
+                                <input type="checkbox" class="form-control-input" id="showMeasures" checked="checked" onchange="showMeasures_change()">
+                                Show Circles
                             </label>
                             <label class="label">
                                 Time (ms)
@@ -47,122 +43,194 @@
                             </label>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <input type="button" class="btn btn-warning float-right" value="Switch Modes" onclick="switchModes_click()">
+                        </div>
+                    </div>
+
+                    <div style="display:none;" id="simControl-div" class="">
+
+                        <div class="row">
+                            <div class="col">
+                                <input type="button" class="btn btn-success float-right" value="New Red Rock" id="newRed" onclick="newRock_click('red')">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <input type="button" class="btn btn-success float-right" value="New Yellow Rock" id="newYel" onclick="newRock_click('yellow')">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <input type="button" class="btn btn-success float-right" value="Throw Rock" onclick="throwRock_click()">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label class="label form-check-label float-right" for="leftHanded" class="noh">
+                                    <input type="checkbox" class="form-control-input" id="leftHanded" onchange="leftHanded_change()">
+                                    Left Handed
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label class="label float-right">
+                                    Curl<br>
+                                    <input type="range" min="0" max="1" value="1" class="simparam slider" id="curl">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label class="label float-right">
+                                    <div>
+                                        Weight
+                                    </div>
+                                    <input type="range" min="0" max="1000000" value="500000" class="simparam slider" id="weight" orient="vertical">
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <label class="label float-right">
+                                    Angle
+                                    <input type="range" min="0" max="1000000" value="500000" class="simparam slider" id="angle">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="col-lg-4" id=svgDiv>
+            <div class="col-lg-3" id=svgDiv>
                 <div id="curling"></div>
             </div>
         
-            <div class="col-lg-6">
-                <div class="row">
-                    <div id="club_scoreboard" class="scoreboard">
-                        Club Scoreboard: Ends are placed to represent cumulative score
-                        <table class="tg1" cellpadding="100">
-                            <tr>
-                            <th class="tg1-sheet" colspan="17">Sheet 1</th>
-                            </tr>
-                            <tr>
-                                <td class="tg1-red"></td>
-                                <td class="tg1-end" id="club_red1"></td>
-                                <td class="tg1-end" id="club_red2"></td>
-                                <td class="tg1-end" id="club_red3"></td>
-                                <td class="tg1-end" id="club_red4"></td>
-                                <td class="tg1-end" id="club_red5"></td>
-                                <td class="tg1-end" id="club_red6"></td>
-                                <td class="tg1-end" id="club_red7"></td>
-                                <td class="tg1-end" id="club_red8"></td>
-                                <td class="tg1-end" id="club_red9"></td>
-                                <td class="tg1-end" id="club_red10"></td>
-                                <td class="tg1-end" id="club_red11"></td>
-                                <td class="tg1-end" id="club_red12"></td>
-                                <td class="tg1-end" id="club_red13"></td>
-                                <td class="tg1-end" id="club_red14"></td>
-                                <td class="tg1-end" id="club_red15"></td>
-                                <td class="tg1-end" id="club_red16"></td>
-                            </tr>
-                            <tr>
-                                <td class="tg1-score"></td>
-                                <td class="tg1-score">1</td>
-                                <td class="tg1-score">2</td>
-                                <td class="tg1-score">3</td>
-                                <td class="tg1-score">4</td>
-                                <td class="tg1-score">5</td>
-                                <td class="tg1-score">6</td>
-                                <td class="tg1-score">7</td>
-                                <td class="tg1-score">8</td>
-                                <td class="tg1-score">9</td>
-                                <td class="tg1-score">10</td>
-                                <td class="tg1-score">11</td>
-                                <td class="tg1-score">12</td>
-                                <td class="tg1-score">13<br></td>
-                                <td class="tg1-score">14</td>
-                                <td class="tg1-score">15</td>
-                                <td class="tg1-score">16</td>
-                            </tr>
-                            <tr>
-                                <td class="tg1-yellow"></td>
-                                <td class="tg1-end" id="club_yel1"></td>
-                                <td class="tg1-end" id="club_yel2"></td>
-                                <td class="tg1-end" id="club_yel3"></td>
-                                <td class="tg1-end" id="club_yel4"></td>
-                                <td class="tg1-end" id="club_yel5"></td>
-                                <td class="tg1-end" id="club_yel6"></td>
-                                <td class="tg1-end" id="club_yel7"></td>
-                                <td class="tg1-end" id="club_yel8"></td>
-                                <td class="tg1-end" id="club_yel9"></td>
-                                <td class="tg1-end" id="club_yel10"></td>
-                                <td class="tg1-end" id="club_yel11"></td>
-                                <td class="tg1-end" id="club_yel12"></td>
-                                <td class="tg1-end" id="club_yel13"></td>
-                                <td class="tg1-end" id="club_yel14"></td>
-                                <td class="tg1-end" id="club_yel15"></td>
-                                <td class="tg1-end" id="club_yel16"></td>
-                            </tr>
-                        </table>
+            <div class="col-lg-7">
+                <div class="row" id="hack_scores">
+                    <div class="col-lg4" >
+                        <div id="hack" style="display:none;"></div>
                     </div>
-                </div>
-                <div class="row">
-                    <div id="tv_scoreboard" class="scoreboard">
-                        TV Scoreboard: Shows points per end
-                        <table class="tg2">
-                            <tr>
-                                <th class="tg2-sheet">Sheet 1</th>
-                                <th class="tg2-end">1</th>
-                                <th class="tg2-end">2</th>
-                                <th class="tg2-end">3</th>
-                                <th class="tg2-end">4</th>
-                                <th class="tg2-end">5</th>
-                                <th class="tg2-end">6</th>
-                                <th class="tg2-end">7</th>
-                                <th class="tg2-end">8</th>
-                                <th class="tg2-total">Total<br></th>
-                            </tr>
-                            <tr>
-                                <td class="tg2-red"></td>
-                                <td class="tg2-score" id="tv_red1"></td>
-                                <td class="tg2-score" id="tv_red2"></td>
-                                <td class="tg2-score" id="tv_red3"></td>
-                                <td class="tg2-score" id="tv_red4"></td>
-                                <td class="tg2-score" id="tv_red5"></td>
-                                <td class="tg2-score" id="tv_red6"></td>
-                                <td class="tg2-score" id="tv_red7"></td>
-                                <td class="tg2-score" id="tv_red8"></td>
-                                <td class="tg2-score" id="tv_redtotal"></td>
-                            </tr>
-                            <tr>
-                                <td class="tg2-yellow"></td>
-                                <td class="tg2-score" id="tv_yel1"></td>
-                                <td class="tg2-score" id="tv_yel2"></td>
-                                <td class="tg2-score" id="tv_yel3"></td>
-                                <td class="tg2-score" id="tv_yel4"></td>
-                                <td class="tg2-score" id="tv_yel5"></td>
-                                <td class="tg2-score" id="tv_yel6"></td>
-                                <td class="tg2-score" id="tv_yel7"></td>
-                                <td class="tg2-score" id="tv_yel8"></td>
-                                <td class="tg2-score" id="tv_yeltotal"></td>
-                            </tr>
-                        </table>
+                    <div class="col-lg-7">
+                        <div class="row">
+                            <div id="club_scoreboard" class="scoreboard">
+                                Club Scoreboard: Ends are placed to represent cumulative score
+                                <table class="tg1" cellpadding="100">
+                                    <tr>
+                                    <th class="tg1-sheet" colspan="17">Sheet 1</th>
+                                    </tr>
+                                    <tr>
+                                        <td class="tg1-red"></td>
+                                        <td class="tg1-end" id="club_red1"></td>
+                                        <td class="tg1-end" id="club_red2"></td>
+                                        <td class="tg1-end" id="club_red3"></td>
+                                        <td class="tg1-end" id="club_red4"></td>
+                                        <td class="tg1-end" id="club_red5"></td>
+                                        <td class="tg1-end" id="club_red6"></td>
+                                        <td class="tg1-end" id="club_red7"></td>
+                                        <td class="tg1-end" id="club_red8"></td>
+                                        <td class="tg1-end" id="club_red9"></td>
+                                        <td class="tg1-end" id="club_red10"></td>
+                                        <td class="tg1-end" id="club_red11"></td>
+                                        <td class="tg1-end" id="club_red12"></td>
+                                        <td class="tg1-end" id="club_red13"></td>
+                                        <td class="tg1-end" id="club_red14"></td>
+                                        <td class="tg1-end" id="club_red15"></td>
+                                        <td class="tg1-end" id="club_red16"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tg1-score"></td>
+                                        <td class="tg1-score">1</td>
+                                        <td class="tg1-score">2</td>
+                                        <td class="tg1-score">3</td>
+                                        <td class="tg1-score">4</td>
+                                        <td class="tg1-score">5</td>
+                                        <td class="tg1-score">6</td>
+                                        <td class="tg1-score">7</td>
+                                        <td class="tg1-score">8</td>
+                                        <td class="tg1-score">9</td>
+                                        <td class="tg1-score">10</td>
+                                        <td class="tg1-score">11</td>
+                                        <td class="tg1-score">12</td>
+                                        <td class="tg1-score">13<br></td>
+                                        <td class="tg1-score">14</td>
+                                        <td class="tg1-score">15</td>
+                                        <td class="tg1-score">16</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tg1-yellow"></td>
+                                        <td class="tg1-end" id="club_yel1"></td>
+                                        <td class="tg1-end" id="club_yel2"></td>
+                                        <td class="tg1-end" id="club_yel3"></td>
+                                        <td class="tg1-end" id="club_yel4"></td>
+                                        <td class="tg1-end" id="club_yel5"></td>
+                                        <td class="tg1-end" id="club_yel6"></td>
+                                        <td class="tg1-end" id="club_yel7"></td>
+                                        <td class="tg1-end" id="club_yel8"></td>
+                                        <td class="tg1-end" id="club_yel9"></td>
+                                        <td class="tg1-end" id="club_yel10"></td>
+                                        <td class="tg1-end" id="club_yel11"></td>
+                                        <td class="tg1-end" id="club_yel12"></td>
+                                        <td class="tg1-end" id="club_yel13"></td>
+                                        <td class="tg1-end" id="club_yel14"></td>
+                                        <td class="tg1-end" id="club_yel15"></td>
+                                        <td class="tg1-end" id="club_yel16"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div id="tv_scoreboard" class="scoreboard">
+                                TV Scoreboard: Shows points per end
+                                <table class="tg2">
+                                    <tr>
+                                        <th class="tg2-sheet">Sheet 1</th>
+                                        <th class="tg2-end">1</th>
+                                        <th class="tg2-end">2</th>
+                                        <th class="tg2-end">3</th>
+                                        <th class="tg2-end">4</th>
+                                        <th class="tg2-end">5</th>
+                                        <th class="tg2-end">6</th>
+                                        <th class="tg2-end">7</th>
+                                        <th class="tg2-end">8</th>
+                                        <th class="tg2-total">Total<br></th>
+                                    </tr>
+                                    <tr>
+                                        <td class="tg2-red"></td>
+                                        <td class="tg2-score" id="tv_red1"></td>
+                                        <td class="tg2-score" id="tv_red2"></td>
+                                        <td class="tg2-score" id="tv_red3"></td>
+                                        <td class="tg2-score" id="tv_red4"></td>
+                                        <td class="tg2-score" id="tv_red5"></td>
+                                        <td class="tg2-score" id="tv_red6"></td>
+                                        <td class="tg2-score" id="tv_red7"></td>
+                                        <td class="tg2-score" id="tv_red8"></td>
+                                        <td class="tg2-score" id="tv_redtotal"></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="tg2-yellow"></td>
+                                        <td class="tg2-score" id="tv_yel1"></td>
+                                        <td class="tg2-score" id="tv_yel2"></td>
+                                        <td class="tg2-score" id="tv_yel3"></td>
+                                        <td class="tg2-score" id="tv_yel4"></td>
+                                        <td class="tg2-score" id="tv_yel5"></td>
+                                        <td class="tg2-score" id="tv_yel6"></td>
+                                        <td class="tg2-score" id="tv_yel7"></td>
+                                        <td class="tg2-score" id="tv_yel8"></td>
+                                        <td class="tg2-score" id="tv_yeltotal"></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row instructions">

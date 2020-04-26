@@ -505,9 +505,26 @@ function manageMeasures(rock) {
 function newSimRock(color) {
     let x = width/2 + (get_leftHanded() ? rockradius : -rockradius)
     let y = height - 2*svg_rockradius
-    simRocks.push({x: x, y: y, color: color, id: simId_gen.next().value, sitting: true, score: true, new: true})
+    let id = simId_gen.next().value
+    simRocks.push({x: x, y: y, color: color, id: id, sitting: true, score: true, new: true})
+    let magnitude = get_weight()
+    let arrow_x = magnitude*Math.sin(-get_angle())
+    let arrow_y = magnitude*Math.cos(-get_angle())
+    simArrow.push({
+        x1: x, 
+        y1: y, 
+        x2: x - arrow_x,
+        y2: y - arrow_y, 
+        id: id,
+    })
+}
 
-    next_color = switchTeams(next_color)
+function getArrowCoords() {
+    let x = width/2 + (get_leftHanded() ? rockradius : -rockradius)
+    let y = height - 2*svg_rockradius
+    let arrow_x = get_weight()*Math.sin(-get_angle())
+    let arrow_y = get_weight()*Math.cos(-get_angle())
+    return {x1:x, y1:y, x2:arrow_x, y2:arrow_y}
 }
 
 function* simId_generator() {
@@ -523,7 +540,7 @@ function get_curl() {
     return slider_to_curl($("#curl").val());
 }
 
-const slider_to_weight = d3.scaleLinear().domain([0, 1000000]).range([.1, 5]);
+const slider_to_weight = d3.scaleLinear().domain([0, 1000000]).range([2.3, 5]);
 function get_weight() {
     return slider_to_weight($("#weight").val());
 }
@@ -537,6 +554,10 @@ const rad_to_deg = d3.scaleLinear().domain([0, 2 * Math.PI]).range([0, 360])
 
 function update_score() {
     let order = mode ? simRocks.sort(scoreSort) : rocks.sort(scoreSort)
+    console.log(order)
+    if (!order.length) {
+        return
+    }
     let first = order[0]
     let first_nonscoring = find(order, r => r.color != first.color || !rockInHouse(r))
 
@@ -648,7 +669,6 @@ function updateSimRocks(simRocks, rock_set="originalPositions") {
         )
 }
 
-
 var web_socket = null;
 
 function setupWebSocket() {
@@ -734,6 +754,26 @@ function onSimParameterChange()
             onSimParameterChange();
         }
     });
+}
+
+function updateSimArrow(simArrow) {
+    const t = d3.transition()
+        .duration(100);
+
+    layer3.selectAll(".arrow")
+        .data(simArrow, d => d.id)
+        .join(
+            enter => {
+                enter.append("line")
+                    .attr("class", "line")
+                    .attr("x1", d => d.x1)
+                    .attr("y1", d => d.y1)
+                    .attr("x2", d => d.x2)
+                    .attr("y2", d => d.y2)
+                    .attr("id", d => d.id)
+                    .style("stroke-width", linewidth)
+            }
+        )
 }
 
 // ============================================================================
@@ -832,13 +872,15 @@ function switchModes_click() {
         // copy or update rocks to simRocks
         let rocks_copy = _.cloneDeep(rocks)
         rocks_copy.forEach(r => {
-            r.id = -r.id
-            i = simRocks.findIndex(sr => sr.id == r.id)
-            if (i >= 0) {
-                simRocks[i] = r
-            } else {
-                simRocks.push(r)
-            }
+            if (rockInPlay(r)) {
+                r.id = -r.id
+                i = simRocks.findIndex(sr => sr.id == r.id)
+                if (i >= 0) {
+                    simRocks[i] = r
+                } else {
+                    simRocks.push(r)
+                } 
+            } 
         })
         
         updateSimRocks(simRocks)
@@ -886,6 +928,7 @@ function newRock_click(color) {
     $("#newYel").prop("disabled", true)
     newSimRock(color)
     updateSimRocks(simRocks)
+    updateSimArrow(simArrow)
 }
 
 function throwRock_click() {

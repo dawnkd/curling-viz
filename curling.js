@@ -550,6 +550,24 @@ function get_angle() {
     return slider_to_angle($("#angle").val());
 }
 
+function updateTimeSlider(final_time) {
+    timeElement = $("#time");
+    final_time = Math.floor(final_time*1000);
+    if(timeElement.val() == timeElement.attr("max"))
+    {
+        timeElement.attr("max", final_time);
+        timeElement.val(final_time);
+    }
+    else
+    {
+        timeElement.attr("max", final_time);
+    }
+}
+
+function get_time() {
+    return $("#time").val() / 1000.0;
+}
+
 const rad_to_deg = d3.scaleLinear().domain([0, 2 * Math.PI]).range([0, 360])
 
 function update_score() {
@@ -633,10 +651,14 @@ var simId_gen = simId_generator()
 
 var simArrow = [];
 
+function getSimRock(id) {
+    return simRocks.find(d => d.id == id);
+}
+
 function updateSimRocks(simRocks, rock_set="originalPositions") {
     const t = d3.transition()
-        .duration(100);
-
+        .duration(50);
+    
     layer4.selectAll('.'+rock_set)
         .data(simRocks, d => d.id)
         .join(
@@ -705,6 +727,8 @@ function simulate(still_rocks, toss, callback) {
 const trajectoryColor = d3.scaleOrdinal(d3.schemeCategory10);
 const trajectoryLine = d3.line().x(d => d.p[0]).y(d => sheet_length - d.p[1]);
 
+var currentTrajectData = null;
+
 function updateTrajectories(traject_data) {
     flat_data = Object.entries(traject_data);
     
@@ -743,6 +767,40 @@ function updateTrajectories(traject_data) {
             .attr("d", d => trajectoryLine(d[1]));
 }
 
+function findRockData(traject, t) {
+    // binary search
+    let a = 0, b = traject.length-1;
+    
+    while(a != b-1)
+    {
+        const m = Math.floor((a+b)/2);
+        if(t > traject[m].t)
+        {
+            a = m;
+        }
+        else
+        {
+            b = m;
+        }
+    }
+    
+    const scaled_t = d3.scaleLinear().domain([traject[a].t, traject[b].t]).clamp(true)(t);
+    const xInterpolate = d3.scaleLinear().range([traject[a].p[0], traject[b].p[0]]);
+    const yInterpolate = d3.scaleLinear().range([traject[a].p[1], traject[b].p[1]]);
+    
+    return {x: xInterpolate(scaled_t), y: sheet_length - yInterpolate(scaled_t)};
+}
+
+function updateProjectedSimRocks(traject_data, t) {
+    projectedRocks = Object.entries(traject_data).map(d => { return {
+        id: d[0],
+        ...getSimRock(d[0]), // Copy remaining properties from original rock
+        ...findRockData(d[1], t)  // Interpolate Position info
+    }});
+    
+    updateSimRocks(projectedRocks, "simulatedRocks");
+}
+
 var onSimParameterChange_lock = 0;
 function onSimParameterChange()
 {
@@ -763,13 +821,23 @@ function onSimParameterChange()
     };
     
     simulate(still_rocks, toss, function(trajects) {
+        currentTrajectData = trajects;
         updateTrajectories(trajects);
+        
+        updateTimeSlider(d3.max(Object.values(trajects).map(d => d[d.length-1].t)));
+        
+        updateProjectedSimRocks(currentTrajectData, get_time());
+        
         if(--onSimParameterChange_lock)
         {
             onSimParameterChange_lock = 0;
             onSimParameterChange();
         }
     });
+}
+
+function onTimeChange() {
+    updateProjectedSimRocks(currentTrajectData, get_time());
 }
 
 function updateSimArrow(simArrow) {
@@ -961,6 +1029,7 @@ function leftHanded_change() {
 }
 
 $(".simparam").on("input", onSimParameterChange);
+$("#time").on("input", onTimeChange);
 
 // ============================================================================
 // TTTTTTTTTTTTTTTTTTTTTTTUUUUUUUU     UUUUUUUUTTTTTTTTTTTTTTTTTTTTTTT     OOOOOOOOO     RRRRRRRRRRRRRRRRR   IIIIIIIIII               AAA               LLLLLLLLLLL             

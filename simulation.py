@@ -83,17 +83,20 @@ class Trajectory(object):
         # First attempt to find closest point the rocks get to one another
         for _ in range(n_collision_find):
             m = (a+b) / 2
-            pa, pb = map(lambda t: la.norm(self.p((t+m)/2) - q), (a, b))
-            if pa < pb:
+            
+            pa, pm, pb = map(lambda t: la.norm(self.p(m + t*(m-a)/100) - q),
+                             [-1, 0, 1])
+            
+            # Rock passes through rock q at t = m
+            if pa < 2*r_rock or pb < 2*r_rock:
+                # Search between a and this point to find time of first collision
+                b = m
+                break
+            elif pa < pb:
                 b = m
             else:
                 a = m
             
-            # Rock passes through rock q at t = (a+b)/2
-            if pa < 2*r_rock or pb < 2*r_rock:
-                # Search between a and this point to find time of first collision
-                b = (a+b)/2
-                break
         else:
             # No collision found
             return None
@@ -113,7 +116,6 @@ def collide(traj, p2, t):
     v1 = traj.v_vec(t)
     
     d = p2 - p1
-    print(d, v1)
     
     R = R_vec(d)
     
@@ -132,7 +134,6 @@ def collide(traj, p2, t):
     return traj1, traj2
 
 def simulate(still_rocks, toss):
-    print(still_rocks, toss)
     trajects = defaultdict(list)
     trajects[toss['id']].append(
         Trajectory(0, toss['p0'], toss['v0'], toss['psi0'], toss['curl']))

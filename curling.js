@@ -923,7 +923,7 @@ function findRockData(traject, t) {
     // binary search
     let a = 0, b = traject.length-1;
     
-    while(a != b-1)
+    while(a < b-1)
     {
         const m = Math.floor((a+b)/2);
         if(t > traject[m].t)
@@ -944,7 +944,20 @@ function findRockData(traject, t) {
 }
 
 function updateProjectedSimRocks(traject_data, t) {
-    projectedRocks = Object.entries(traject_data).map(d => { return {
+    console.log(traject_data);
+    
+    merged_data = {
+        ...Object.fromEntries(
+            simRocks.map(
+                d => [d.id, [{t: 0, p: [d.x, d.y], v: 0, psi: 0}]]
+            )
+        ),
+        ...traject_data
+    };
+    
+    console.log(merged_data);
+    
+    projectedRocks = Object.entries(merged_data).map(d => { return {
         id: d[0],
         ...getSimRock(d[0]), // Copy remaining properties from original rock
         ...findRockData(d[1], t)  // Interpolate Position info

@@ -133,15 +133,15 @@ to mactch btn classes
     margin-bottom: 0px !important;
 }
 
-#angle {
-    width: 300px;
+.slider#time {
+    width: 200px;
 }
 
 input[type=range][orient=vertical] {
     writing-mode: bt-lr; /* IE */
     -webkit-appearance: slider-vertical; /* WebKit */
     width: 50px;
-    height: 300px;
+    height: 250px;
 }
 
 .btn:disabled {cursor:default;}
@@ -192,13 +192,13 @@ input[type=range][orient=vertical] {
 
 .rock, .simRock, .hackRock {stroke: grey; }
 
-.rock {
+.rock, .skip {
     cursor: grab;
     cursor: -moz-grab;
     cursor: -webkit-grab;
 }
 
-.rock:active,{
+.rock:active, .skip:active{
     cursor: grabbing;
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
@@ -236,4 +236,14 @@ path.trajectory {
 }
 
 .hack {fill:black;}
+
+.skip.circle {
+    fill:rgba(0,0,0,0);
+    stroke:black;
+    stroke-width: .04;
+}
+
+.skip.line {
+    stroke-width: .04;
+}
 

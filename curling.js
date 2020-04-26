@@ -85,6 +85,43 @@ var layerPi = svg.append('g')
 var layer4 = svg.append('g')
 //top layer
 
+var skip = []
+skip.push({x: pin.x, y:pin.y, r: rockradius*2, r2: rockradius*2.5})
+
+var skip_group = svg.append('g')
+    .attr("id", "skip")
+    .data(skip)
+    .call(d3.drag()
+        .clickDistance(CLICK_DISTANCE)
+        .on("start", skip_dragstarted)
+        .on("drag", skip_dragged)
+        .on("end", skip_dragended)
+    )
+    .attr("style", "display:none;")
+
+// skip
+skip_group.append("circle")
+    .attr("class", "skip circle")
+    // .attr("id", d => d.id)
+    .attr("cx", d => d.x)
+    .attr("cy", d => d.y)
+    .attr("r", d => d.r)
+skip_group.append("line")
+    .attr("class", "skip line x")
+    // .attr("id", d => d.id)
+    .attr("x1", d => d.x - d.r2)
+    .attr("y1", d => d.y)
+    .attr("x2", d => d.x + d.r2)
+    .attr("y2", d => d.y)
+skip_group.append("line")
+    .attr("class", "skip line y")
+    // .attr("id", d => d.id)
+    .attr("x1", d => d.x)
+    .attr("y1", d => d.y - d.r2)
+    .attr("x2", d => d.x)
+    .attr("y2", d => d.y + d.r2)
+
+
 //sheet
 layer1.append("rect")
     .attr("class", "sheet white")
@@ -212,6 +249,7 @@ layer1.append("circle")
     .attr("cy", pin.y)
 
 
+
 updateRocks(rocks);
 $(function() {
     update_score();
@@ -259,6 +297,31 @@ var svg2 = hack.append("svg")
     .attr("viewBox", `0 0 ${width2} ${height2}`)
     .append("g")
     .attr("class", "hack")
+
+// arrowhead
+var markerBoxWidth = 10,
+    markerBoxHeight = 10,
+    refX = 5,
+    refY = 5,
+    arr1 = 0,
+    arr2 = 10,
+    arr3 = 5
+var arrowPoints = [[arr1, arr1], [arr1, arr2], [arr2, arr3]];
+svg2
+    .append('defs')
+    .append('marker')
+    .attr('id', 'arrow')
+    .attr('viewBox', [0, 0, markerBoxWidth, markerBoxHeight])
+    .attr('refX', refX)
+    .attr('refY', refY)
+    .attr('markerWidth', markerBoxWidth)
+    .attr('markerHeight', markerBoxHeight)
+    .attr('orient', 'auto-start-reverse')
+    .append('path')
+    .attr('d', d3.line()(arrowPoints))
+    .attr('stroke', 'black');
+
+
 
 // lacker = hack + layer
 var lacker1 = svg2.append('g')
@@ -625,9 +688,11 @@ function manageMeasures(rock) {
 }
 
 function newSimRock(color) {
-    let {x1, y1, x2, y2} = getHackCoords(width2, height2)
+    let {x1, y1} = getHackCoords(width2, height2)
+    let {x2, y2} = getArrowCoords(x1, y1)
     // let id = simId_gen.next().value
     id = "i am an id"
+    // add rock to hack view
     hackRock.push({x: x1, y: y1, color: color, id: id, sitting: true, score: true, new: true})
     hackArrow.push({
         x1: x1, 
@@ -637,6 +702,7 @@ function newSimRock(color) {
         id: id,
     })
 
+    // add rock at hack position of screen in normal view
     c = getHackCoords(width, sheet_length)
     simRocks.push({x: c.x1, y: c.y1, color: color, id: simId_gen.next().value, sitting: true, score: true, new: true})
 }
@@ -644,10 +710,15 @@ function newSimRock(color) {
 function getHackCoords(width, height) {
     let x = width/2 + (get_leftHanded() ? rockradius*3/2 : -sixinches*3/2)
     let y = height - sixinches - hack_height - rockradius*5/2
+    
+    return {x1:x, y1:y}
+}
+
+function getArrowCoords(x, y) {
     let mag = get_weight()/2
     let arrow_x = x - mag*Math.sin(get_angle())
     let arrow_y = y - mag*Math.cos(-get_angle())
-    return {x1:x, y1:y, x2:arrow_x, y2:arrow_y}
+    return {x2: arrow_x, y2: arrow_y}
 }
 
 function* simId_generator() {
@@ -663,14 +734,17 @@ function get_curl() {
     return slider_to_curl($("#curl").val());
 }
 
-const slider_to_weight = d3.scaleLinear().domain([0, 1000000]).range([2.3, 5]);
+const slider_to_weight = d3.scaleLinear().domain([0, 1000000]).range([2.3, 4]);
 function get_weight() {
     return slider_to_weight($("#weight").val());
 }
 
 const slider_to_angle = d3.scaleLinear().domain([0, 1000000]).range([0.2, -0.2]);
 function get_angle() {
-    return slider_to_angle($("#angle").val());
+    let {x1, y1} = getHackCoords(width, sheet_length)
+    let x_diff = x1 - skip[0].x
+    let y_diff = y1 - skip[0].y
+    return y_diff == 0 ? y_diff : Math.tan((x_diff)/(y_diff))
 }
 
 function updateTimeSlider(final_time) {
@@ -695,7 +769,6 @@ const rad_to_deg = d3.scaleLinear().domain([0, 2 * Math.PI]).range([0, 360])
 
 function update_score() {
     let order = mode ? simRocks.sort(scoreSort) : rocks.sort(scoreSort)
-    console.log(order)
     if (!order.length) {
         return
     }
@@ -774,6 +847,7 @@ var hackRock = [];
 var simId_gen = simId_generator()
 
 var hackArrow = [];
+// var skip = [];
 
 function getSimRock(id) {
     return simRocks.find(d => d.id == id);
@@ -972,7 +1046,8 @@ function onSimParameterChange()
         curl: get_curl()
     };
 
-    let {x1, y1, x2, y2} = getHackCoords(width2, height2)
+    let {x1, y1} = getHackCoords(width2, height2)
+    let {x2, y2} = getArrowCoords(x1, y1)
     hackArrow[0].x1 = x1
     hackArrow[0].y1 = y1
     hackArrow[0].x2 = x2
@@ -1015,6 +1090,7 @@ function updatehackArrow(hackArrow) {
                     .attr("y2", d => d.y2)
                     .attr("id", d => d.id)
                     .style("stroke-width", linewidth)
+                    .attr("marker-end", "url(#arrow)")
             },
             update => {
                 update.call(update => update.transition(t)
@@ -1026,6 +1102,47 @@ function updatehackArrow(hackArrow) {
             exit => exit.remove()
         )
 }
+
+function skip_clicked(d, i) {
+    if (d3.event.defaultPrevented) return; // dragged
+}
+
+function skip_dragstarted(d) {
+    skip.startX = d3.event.sourceEvent.clientX;
+    skip.startY = d3.event.sourceEvent.clientY;
+}
+
+function skip_dragged(d) {
+    var e = d3.select(this),
+        dStartX = skip.startX - d3.event.sourceEvent.clientX,
+        dStartY = skip.startY - d3.event.sourceEvent.clientY;
+
+    if (dStartX * dStartX + dStartY * dStartY > CLICK_DISTANCE_2 &&
+        !e.classed("active")) {
+
+        e.raise().classed("active", true);
+    }
+    e.select("circle")
+        .attr("cx", d.x = d3.event.x)
+        .attr("cy", d.y = d3.event.y)
+    e.select(".x")
+        .attr("x1", d.x - d.r2)
+        .attr("y1", d.y)
+        .attr("x2", d.x + d.r2)
+        .attr("y2", d.y)
+    e.select(".y")
+            .attr("x1", d.x)
+        .attr("y1", d.y - d.r2)
+        .attr("x2", d.x)
+        .attr("y2", d.y + d.r2)
+
+    onSimParameterChange()
+}
+
+function skip_dragended(d) {
+    d3.select(this).classed("active", false);
+}
+
 
 // ============================================================================
 
@@ -1110,6 +1227,7 @@ function switchModes_click() {
     if (mode == 0) {
         $("#simControl-div").show()
         $("#hack").show()
+        $("#skip").show()
         $("#resetButton").prop("disabled", true)
         // update mode text
         $("#mode-label").text("Simulation Mode")
@@ -1145,6 +1263,7 @@ function switchModes_click() {
     else {
         $("#simControl-div").hide()
         $("#hack").hide()
+        $("#skip").hide()
         $("#resetButton").prop("disabled", false)
         // update mode text
         $("#mode-label").text("Tutorial Mode")
@@ -1187,7 +1306,10 @@ function newRock_click(color) {
 function throwRock_click() {
     $("#newRed").prop("disabled", false)
     $("#newYel").prop("disabled", false)
-    $(".new").removeClass("new")
+    updateHackRock([])
+    hackRock = []
+    updatehackArrow([])
+    hackArrow = []
 }
 
 function leftHanded_change() {
@@ -1195,7 +1317,8 @@ function leftHanded_change() {
     simRocks[i].x = getHackCoords(width, sheet_length).x1
     updateSimRocks(simRocks)
     let j = hackRock.findIndex(hr => hr.new)
-    let {x1, y1, x2, y2} = getHackCoords(width2, height2)
+    let {x1, y1} = getHackCoords(width2, height2)
+    let {x2, y2} = getArrowCoords(x1, y1)
     hackRock[j].x = x1
     updateHackRock(hackRock)
     hackArrow[0].x1 = x1

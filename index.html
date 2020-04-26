@@ -36,8 +36,14 @@
                                 <input type="checkbox" class="form-control-input" id="showMeasures" checked="checked" onchange="showMeasures_change()">
                                 Show Circles
                             </label>
-                            <label class="label">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col">
+                            <label class="label float-right">
                                 Time (ms)
+                                <br>
                                 <input type="range" min="0" max="1" value="1"
                                 class="slider" id="time" />
                             </label>
@@ -82,7 +88,8 @@
                         <div class="row">
                             <div class="col">
                                 <label class="label float-right">
-                                    Curl<br>
+                                    Curl
+                                    <br>
                                     <input type="range" min="0" max="1" value="1" class="simparam slider" id="curl">
                                 </label>
                             </div>
@@ -95,15 +102,6 @@
                                         Weight
                                     </div>
                                     <input type="range" min="0" max="1000000" value="500000" class="simparam slider" id="weight" orient="vertical">
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col">
-                                <label class="label float-right">
-                                    Angle
-                                    <input type="range" min="0" max="1000000" value="500000" class="simparam slider" id="angle">
                                 </label>
                             </div>
                         </div>

@@ -421,7 +421,7 @@ function updateRocks(rocks) {
         .join(
             enter => {
                 enter.append("circle")
-                    .attr("class", d => `rock ${d.color}`)
+                    .attr("class", d => `rock ${d.color}${d.sitting ? "" : " no-sit"}`)
                     .attr("name", d => d.name)
                     .attr("id", d => d.id)
                     .attr("r", rockradius)
@@ -442,6 +442,7 @@ function updateRocks(rocks) {
                     // if rock is not sitting, add no-sit class (darkens rock); if not scoring, add no-score class (greys out rock)
                     .attr("class", d => `rock ${d.color}${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
                 )
+                d => console.log(d.id, s.sitting)
             },
             exit => {
                 exit.remove()
@@ -463,7 +464,7 @@ function updateMeasures(measures) {
         .join(
             enter => {
                 enter.append("circle")
-                    .attr("class", d => `measure line`)
+                    .attr("class", d => `measure line${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
                     .attr("id", d => d.id)
                     .attr("r", d => d.r)
                     .attr("cx", pin.x)
@@ -486,7 +487,7 @@ function updateMeasures(measures) {
         .join(
             enter => {
                 enter.append("circle")
-                    .attr("class", d => `measure ${d.color}`)
+                    .attr("class", d => `measure ${d.color}${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
                     .attr("id", d => d.id)
                     .attr("r", d => d.r)
                     .attr("cx", pin.x)
@@ -551,35 +552,36 @@ function dragged(d) {
     manageMeasures(d)
 
     // determine which rocks are sitting
-    let order = rocks.sort(scoreSort)
-    let first = order[0]
-    let first_nonscoring = find(order, r => r.color != first.color)
-    order.forEach((e,i) => {
-        if (rockInPlay(e)) {
-            // darken rocks and measures that aren't sitting
-            if (i >= first_nonscoring) {
-                e.sitting = false
-                if (rockInHouse(e)) {
-                    m = find(measures, m => m.id == e.id)
-                    measures[m].sitting = false
-                }
-            }
-            else {
-                // don't darken rocks and measures that are sitting
-                e.sitting = rockInHouse(e)
+    // manageSitting()
+    // let order = rocks.sort(scoreSort)
+    // let first = order[0]
+    // let first_nonscoring = find(order, r => r.color != first.color)
+    // order.forEach((e,i) => {
+    //     if (rockInPlay(e)) {
+    //         // darken rocks and measures that aren't sitting
+    //         if (i >= first_nonscoring) {
+    //             e.sitting = false
+    //             if (rockInHouse(e)) {
+    //                 m = find(measures, m => m.id == e.id)
+    //                 measures[m].sitting = false
+    //             }
+    //         }
+    //         else {
+    //             // don't darken rocks and measures that are sitting
+    //             e.sitting = rockInHouse(e)
                 
-                if (rockInHouse(e)) {
-                    m = find(measures, m => m.id == e.id)
-                    measures[m].sitting = true
-                }
-            }
-        } else { // don't darken rocks that aren't in play
-            e.sitting = true;
-        }
-    })
+    //             if (rockInHouse(e)) {
+    //                 m = find(measures, m => m.id == e.id)
+    //                 measures[m].sitting = true
+    //             }
+    //         }
+    //     } else { // don't darken rocks that aren't in play
+    //         e.sitting = true;
+    //     }
+    // })
 
     
-    updateRocks(order)
+    updateRocks(manageSitting)
     updateMeasures(measures)
 }
 
@@ -687,6 +689,40 @@ function manageMeasures(rock) {
     }
 }
 
+function manageSitting() {
+    let order = mode ? simRocks.sort(scoreSort) : rocks.sort(scoreSort)
+    let first = order[0]
+    let first_nonscoring = find(order, r => r.color != first.color || !rockInHouse(r)) || order.length
+    
+    order.forEach((e,i) => {
+        if (rockInPlay(e)) {
+            // darken rocks and measures that aren't sitting
+            if (i >= first_nonscoring) {
+                e.sitting = false
+                if (rockInHouse(e)) {
+                    m = find(measures, m => m.id == e.id)
+                    measures[m].sitting = false
+                }
+            }
+            else {
+                // don't darken rocks and measures that are sitting
+                e.sitting = rockInHouse(e)
+                
+                if (rockInHouse(e)) {
+                    m = find(measures, m => m.id == e.id)
+                    measures[m].sitting = true
+                }
+            }
+        } else { // don't darken rocks that aren't in play
+            e.sitting = true;
+        }
+    })
+    // console.log(order)
+    // console.log(measures)
+    return order
+    // updateMeasures(measures)
+}
+
 function newSimRock(color) {
     let {x1, y1} = getHackCoords(width2, height2)
     let {x2, y2} = getArrowCoords(x1, y1)
@@ -725,7 +761,7 @@ function getArrowCoords(x, y) {
 function* simId_generator() {
     id = -1
     while (true) {
-        ids = rocks.map(sr => -sr.id)
+        ids = rocks.map(r => -r.id).concat(simRocks.map(sr => sr.id))
         yield ids.length ? Math.min(... ids) - 1 : id
     }
 }
@@ -766,6 +802,10 @@ function get_time() {
     return $("#time").val() / 1000.0;
 }
 
+function get_timeMax() {
+    return $("#time").attr("max") / 1000.0;
+}
+
 const rad_to_deg = d3.scaleLinear().domain([0, 2 * Math.PI]).range([0, 360])
 
 function update_score() {
@@ -774,9 +814,9 @@ function update_score() {
         return
     }
     let first = order[0]
-    let first_nonscoring = find(order, r => r.color != first.color || !rockInHouse(r))
+    let first_nonscoring = find(order, r => r.color != first.color || !rockInHouse(r)) || order.length
 
-    let score = rockInPlay(first) ? first_nonscoring : 0
+    let score = rockInHouse(first) ? first_nonscoring : 0
 
     if (score > 0) {
         // determine which team scored and increment scores
@@ -813,8 +853,8 @@ function update_score() {
         $(`#tv_scoreboard #tv_yel${current_end}`).text(score)
     }
 
-    $(`#tv_scoreboard #tv_redtotal`).text(red_score+score)
-    $(`#tv_scoreboard #tv_yeltotal`).text(yel_score+score)
+    $(`#tv_scoreboard #tv_redtotal`).text(red_score+(scoring_team == "red" ? score : 0))
+    $(`#tv_scoreboard #tv_yeltotal`).text(yel_score+(scoring_team == "yellow" ? score : 0))
 
     return {order:order, first:first, first_nonscoring:first_nonscoring, score:score}
 }
@@ -863,7 +903,7 @@ function updateSimRocks(simRocks, rock_set="originalPositions") {
         .join(
             enter => {
                 enter.append("circle")
-                    .attr("class", d => `${rock_set} simRock ${d.color}${d.new ? "" : " new"}`)
+                    .attr("class", d => `${rock_set} simRock ${d.color}${d.new ? "" : " new"}${d.sitting ? "" : " no-sit"}${d.score ? "" : " no-score"}`)
                     .attr("name", d => d.name)
                     .attr("id", d => d.id)
                     .attr("r", rockradius)
@@ -1039,6 +1079,7 @@ function updateProjectedSimRocks(traject_data, t) {
     
     projectedRocks.forEach(manageMeasures);
     updateMeasures(measures);
+    return projectedRocks
 }
 
 var onSimParameterChange_lock = 0;
@@ -1233,6 +1274,7 @@ function score_click() {
 
     score_flag = true;
     updateRocks(order)
+    // updateSimRocks(order)
     updateMeasures(measures)
 }
 
@@ -1244,10 +1286,18 @@ var mode = 0
 function switchModes_click() {
     //enter simulation mode
     if (mode == 0) {
+        if (score_flag) {
+            rocks.forEach((e) => e.score = true)
+            measures.forEach((e) => e.score = true)
+            updateRocks(rocks)
+            updateMeasures(measures)
+            score_flag = false;
+        }
         $("#simControl-div").show()
         $("#hack").show()
         $("#skip").show()
         $("#resetButton").prop("disabled", true)
+
         // update mode text
         $("#mode-label").text("Simulation Mode")
         let bbox = $("#mode-label")[0].getBBox()
@@ -1256,8 +1306,10 @@ function switchModes_click() {
             .attr("y", 0+bbox.height*0.1)
             .attr("width", bbox.width*1.1)
             .attr("height", bbox.height)
+
         // clear tutorial rocks
         updateRocks([])
+
         // copy or update rocks to simRocks
         let rocks_copy = _.cloneDeep(rocks)
         rocks_copy.forEach(r => {
@@ -1271,12 +1323,13 @@ function switchModes_click() {
                 } 
             } 
         })
-        
-        updateSimRocks(simRocks)
-        simRocks.forEach(sr => manageMeasures(sr))
+
+        simRocks.forEach(r => manageMeasures(r))
+        mode = 1
+        // manageSitting()
+        updateSimRocks(manageSitting())
         // updateMeasures()
         next_color = teams[hammer]
-        mode = 1
     }
     // enter tutorial mode
     else {
@@ -1293,15 +1346,16 @@ function switchModes_click() {
             .attr("width", bbox.width*1.1)
             .attr("height", bbox.height)
         //clear simulation rocks
-        updateSimRocks([], "originalRocks")
+        updateSimRocks([], "originalPositions")
         updateSimRocks([], "simulatedRocks")
         updateTrajectories({})
         simRocks = []
 
-        updateRocks(rocks)
-        rocks.forEach(r => manageMeasures(r))
-
         mode = 0
+        rocks.forEach(r => manageMeasures(r))
+        
+        updateRocks(manageSitting())
+
     }
     updateMeasures(measures)
 }
@@ -1309,6 +1363,7 @@ function switchModes_click() {
 function newRock_click(color) {
     $("#newRed").prop("disabled", true)
     $("#newYel").prop("disabled", true)
+    $("#throw").prop("disabled", false)
     newSimRock(color)
     updateHackRock(hackRock)
     updatehackArrow(hackArrow)
@@ -1317,12 +1372,40 @@ function newRock_click(color) {
 function throwRock_click() {
     $("#newRed").prop("disabled", false)
     $("#newYel").prop("disabled", false)
+    $("#throw").prop("disabled", true)
+
+    $("#time").val($("#time").attr("max"))
+    simRocks = updateProjectedSimRocks(currentTrajectData, get_timeMax());
+    simRocks.forEach(manageMeasures)
+    console.log(manageSitting())
+    updateSimRocks(manageSitting(), "originalPositions")
+    // manageSitting()
+    updateTrajectories({})
+    updateMeasures(measures)
+    // copy or update simRocks to rocks
+    simRocks.forEach(d => d.new ? d.new = false : d.new = d.new);
+    let simRocks_copy = _.cloneDeep(simRocks)
+    simRocks_copy.forEach(r => {
+        if (rockInPlay(r)) {
+            r.id = -r.id
+            i = rocks.findIndex(sr => sr.id == r.id)
+            if (i >= 0) {
+                rocks[i] = r
+            } else {
+                rocks.push(r)
+            } 
+        } 
+    })
+    rocks.forEach(manageMeasures)
+
     updateHackRock([])
     hackRock = []
     updatehackArrow([])
     hackArrow = []
-    simRocks = simRocks.filter(d => !d.new);
     onSimParameterChange();
+    update_score()
+    
+
 }
 
 function leftHanded_change() {
@@ -1381,6 +1464,7 @@ var highlight_arr = [
     {class:".tut-score", selector:".score"},
     {class:".tut-scoreboard", selector:".scoreboard"},
     {class:".tut-measures", selector:".checkbox, .measure"},
+    {class:".tut-switch", selector:"#switch"}
 ]
 
 highlight_arr.forEach(e => {

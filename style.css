@@ -58,12 +58,12 @@ body {
 .rock.highlight {fill: cyan !important;}
 
 [name="backline"].highlight, [name="tline"].highlight, [name="centerline"].highlight {
-    stroke-width: 5 !important;
+    stroke-width: .05 !important;
     stroke: cyan !important;
 }
 
 [name="hogline"].highlight {
-    stroke-width: 10 !important;
+    stroke-width: .10 !important;
     stroke: cyan !important;
 }
 

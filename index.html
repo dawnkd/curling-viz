@@ -52,7 +52,7 @@
 
                     <div class="row">
                         <div class="col">
-                            <input type="button" class="btn btn-warning float-right" value="Switch Modes" onclick="switchModes_click()">
+                            <input type="button" class="btn btn-warning float-right" value="Switch Modes" id="switch" onclick="switchModes_click()">
                         </div>
                     </div>
 
@@ -72,7 +72,7 @@
 
                         <div class="row">
                             <div class="col">
-                                <input type="button" class="btn btn-success float-right" value="Throw Rock" onclick="throwRock_click()">
+                                <input type="button" class="btn btn-success float-right" value="Throw Rock" id="throw" disabled="disbaled" onclick="throwRock_click()">
                             </div>
                         </div>
 
@@ -254,13 +254,21 @@
                             </ul>
                             <li>The TV score board works like a normal scoreboard</li>
                         </ul>
+                        <li>The <span class="help tut-switch">Switch Modes button</span> switches between tutorial mode and simulation mode</li>
+                        <li>Simulation Mode</li>
+                        <ul>
+                            <li>The new rock buttons will let you throw a new rock.</li>
+                            <li>The throw rock button inputs the shown trajectories.</li>
+                            <li>The left handed checkbox, curl slider, weight slider, and draggable skip crosshair all effect the trajectory of the shot.</li>
+                            <li>The time slider can be adjusted to show the rocks and different points in time in their trajectory.</li>
+                        </ul>
                     </ul>
                     <p>
                         General curling knowledge:
                     </p>
+
                     <ul>
-                        <li>The "rink" that curling is played on is called a sheet.</li>
-                        <li>The concentric rings forming a target is known as the <span class="help tut-house">house</span>.
+                        <li style="width:700px;">The concentric rings forming a target is known as the <span class="help tut-house">house</span>.
                         <ul>
                             <li>
                                 The house consists of 3 rings with diameters of 
@@ -274,10 +282,7 @@
                         <li>The <span class="help tut-backline">backline</span> is tangent to the back of the house.</li>
                         <li>The <span class="help tut-tline">tee line</span> bisects the house horizontally.</li>
                         <li>The <span class="help tut-centerline">center line</span> runs lengthwise down the center of the ice.</li>
-                        <li>A rock enters play when it completely crosses the <span class="help tut-hogline">hogline</span> or comes into contact with another rock.</li>
-                        <li>A rock is considered to be in play until it completely crosses the <span class="help tut-backline">backline</span>.</li>
                         <li>Rocks inside the house are called draws.</li>
-                        <li>If only part of a rock is inside the house it is called a biter.</li>
                         <li>Rocks outside of the house and in front of the <span class="help tut-tline">tee line</span> are called guards.</li>
                         <li>A rock is <span class="help tut-sit">sitting</span> when it is in the house and closer to the pin than any opposing rock.</li>
                     </ul>

@@ -228,6 +228,8 @@ input[type=range][orient=vertical] {
 
 .measure.no-score {stroke: grey;}
 
+.simulatedRocks {opacity: 0.5;}
+
 #mode-label {background-color: lightgrey; cursor: default;}
 
 path.trajectory {

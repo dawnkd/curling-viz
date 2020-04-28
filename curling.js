@@ -705,6 +705,7 @@ function newSimRock(color) {
     // add rock at hack position of screen in normal view
     c = getHackCoords(width, sheet_length)
     simRocks.push({x: c.x1, y: c.y1, color: color, id: simId_gen.next().value, sitting: true, score: true, new: true})
+    onSimParameterChange();
 }
 
 function getHackCoords(width, height) {
@@ -1018,19 +1019,16 @@ function findRockData(traject, t) {
 }
 
 function updateProjectedSimRocks(traject_data, t) {
-    console.log(traject_data);
     
     merged_data = {
         ...Object.fromEntries(
             simRocks.map(
-                d => [d.id, [{t: 0, p: [d.x, d.y], v: 0, psi: 0}]]
+                d => [d.id, [{t: 0, p: [d.x, sheet_length - d.y], v: 0, psi: 0}]]
             )
         ),
         ...traject_data
     };
-    
-    console.log(merged_data);
-    
+        
     projectedRocks = Object.entries(merged_data).map(d => { return {
         id: d[0],
         ...getSimRock(d[0]), // Copy remaining properties from original rock
@@ -1038,11 +1036,19 @@ function updateProjectedSimRocks(traject_data, t) {
     }});
     
     updateSimRocks(projectedRocks, "simulatedRocks");
+    
+    projectedRocks.forEach(manageMeasures);
+    updateMeasures(measures);
 }
 
 var onSimParameterChange_lock = 0;
 function onSimParameterChange()
 {
+    toss_rock = simRocks.find(d => d.new);
+    
+    if(!toss_rock)
+        return;
+    
     if(onSimParameterChange_lock++)
         return;
     
@@ -1287,18 +1293,10 @@ function switchModes_click() {
             .attr("width", bbox.width*1.1)
             .attr("height", bbox.height)
         //clear simulation rocks
-        updateSimRocks([])
-        // copy or update simRocks to rocks
-        let simRocks_copy = _.cloneDeep(simRocks)
-        simRocks_copy.forEach(r => {
-            r.id = -r.id
-            i = rocks.findIndex(sr => sr.id == r.id)
-            if (i >= 0) {
-                rocks[i] = r
-            } else {
-                rocks.push(r)
-            }
-        })
+        updateSimRocks([], "originalRocks")
+        updateSimRocks([], "simulatedRocks")
+        updateTrajectories({})
+        simRocks = []
 
         updateRocks(rocks)
         rocks.forEach(r => manageMeasures(r))
@@ -1323,6 +1321,8 @@ function throwRock_click() {
     hackRock = []
     updatehackArrow([])
     hackArrow = []
+    simRocks = simRocks.filter(d => !d.new);
+    onSimParameterChange();
 }
 
 function leftHanded_change() {
@@ -1339,6 +1339,7 @@ function leftHanded_change() {
     hackArrow[0].x2 = x2
     hackArrow[0].y2 = y2
     updatehackArrow(hackArrow)
+    onSimParameterChange();
 }
 
 $(".simparam").on("input", onSimParameterChange);

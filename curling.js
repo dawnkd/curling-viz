@@ -1359,6 +1359,17 @@ function switchModes_click() {
     }
     updateMeasures(measures)
 }
+function flip_coin(){
+	if(Math.random() < 0.5)
+	{
+		newRock_click("red")
+	}
+	else
+	{
+		newRock_click("yellow")
+	}
+}
+
 
 function newRock_click(color) {
     $("#newRed").prop("disabled", true)
